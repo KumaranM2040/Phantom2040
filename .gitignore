@@ -150,8 +150,3 @@ Tools/X2.Applications/src/SAHL.X2Designer/Cache/
 **/default.dev.aspx
 **/sahl.yaml.configuration/*
 **/sahl.services.interfaces.test.fakes/*
-
-.vscode/
-!.vscode/launch.json
-!.vscode/settings.json
-!.vscode/tasks.json
