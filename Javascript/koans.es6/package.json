@@ -1,0 +1,36 @@
+{
+  "name": "es6.koans",
+  "version": "1.0.0",
+  "description": "set of exercises to learn es6 and es7",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "live-server",
+    "start:modules": "live-server src/modules-example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hackages/es6.koans"
+  },
+  "keywords": [
+    "es6",
+    "javascript",
+    "es7",
+    "hackages"
+  ],
+  "author": "007@hackages.io",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hackages/es6.koans/issues"
+  },
+  "homepage": "https://github.com/hackages/es6.koans",
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.32"
+  },
+  "dependencies": {
+    "chai": "^3.3.0",
+    "live-server": "^1.1.0",
+    "mocha": "^2.3.3"
+  }
+}

@@ -1,0 +1,32 @@
+.custom {
+    font-family: Arial, Helvetica, sans-serif;
+    color: turquoise;
+    font-size: 32px;
+    /* border-block-end-width: 10px; */
+    animation-fill-mode: forwards;
+    box-shadow: rgb(214, 53, 12)
+}
+
+body {
+    font: normal 100% "trebuchet ms", Arial, Helvetica, sans-serif;
+    /* font-size: 40px; */
+    text-shadow: 1px 1px blue;
+    
+}
+
+a {
+    color: #ec0d0d;
+}
+
+A:visited {
+    color: #005177;
+}
+
+a:hover {
+    color: #0804f1;
+}
+
+
+.custom2:hover {
+    color: #0804f1;
+}

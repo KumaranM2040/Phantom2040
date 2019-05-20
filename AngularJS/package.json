@@ -1,0 +1,19 @@
+{
+  "name": "angular-js-tutorial",
+  "version": "1.0.0",
+  "description": "Angular JS Tutorial",
+  "main": "index.js",
+  "author": "DevFluence",
+  "license": "MIT",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "concurrently --kill-others \"npm:serve-*\"",
+    "serve-api": "json-server -p 4041 --watch data/db.json .",
+    "serve-site": "live-server --port=4040 --ignore=data"
+  },
+  "dependencies": {
+    "concurrently": "^4.0.1",
+    "json-server": "^0.14.0",
+    "live-server": "^1.2.0"
+  }
+}

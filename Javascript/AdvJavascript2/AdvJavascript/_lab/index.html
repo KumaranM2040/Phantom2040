@@ -1,0 +1,63 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS Tutorial</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+  <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+  <div>
+    <h1>Hello!</h1>
+    <label>Name:</label>
+    <input type="text" placeholder="Enter a name here">
+    <hr>
+  </div>
+
+  <div style="display: block">
+    <h2>Todos</h2>
+    <div ng-controller="TodoListController as todoList">
+      <span>1 of 3 remaining</span>
+      [ <a href="">archive completed</a> ]
+      <ul class="unstyled">
+        <li>
+          <label class="checkbox">
+            <input type="checkbox" checked>            
+          </label>
+          <span class="completed">Learn AngularJS</span>
+        </li>
+        <li>
+          <label class="checkbox">
+            <input type="checkbox" checked>            
+          </label>
+          <span class="completed">Run tutorial app</span>
+        </li>
+        <li>
+          <label class="checkbox">
+            <input type="checkbox">
+          </label>
+          <span>Manage todos</span>
+        </li>
+      </ul>
+      <form>
+        <input type="text" size="30" placeholder="add new todo here">
+        <input class="btn-primary" type="submit" value="add">
+      </form>
+    </div>
+  </div>
+
+  <div style="display: block">
+    <h2>Summary</h2>
+    <div>
+      <ul class="unstyled">
+        <li> Completed Todos: 2 </li>
+        <li> Uncompleted Todos: 1 </li>
+        <li> Total Todos: 3 </li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+
+</html>

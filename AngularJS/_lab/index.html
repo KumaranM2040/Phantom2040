@@ -1,0 +1,55 @@
+<html ng-app="toDoApplication">
+
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS Tutorial</title>
+  <script src="../angular.js"></script>
+  <script src="../angular-route.js"></script>
+  <link rel="stylesheet" href="app.css">
+  <script src="toDoList.js"></script>
+</head>
+
+<body>
+  <div>
+    <h1>Kumaran's To Do List</h1>
+    <label>Name:</label>
+    <input type="text" placeholder="Enter To Do name here">
+    <hr>
+  </div>
+
+  <div style="display: block">
+    <h2>Todos</h2>
+    <div ng-controller="TodoListController">
+      <span>{{toDoItem.toDoList.length - toDoItem.countOfCompleted}} of {{toDoItem.toDoList.length}} remaining</span>
+      [ <a href="">archive completed</a> ]
+      <ul class="unstyled">
+        <li ng-repeat="todo in toDoItem.toDoList">
+          <label class="checkbox">
+            <input type="checkbox" ng-model=todo.completionStatus>
+          </label>
+          <span ng-if=todo.completionStatus class="completed">{{todo.name}} </span>
+          <span ng-if=!todo.completionStatus>{{todo.name}} </span>
+          <a ng-href="toDoItem.removeItem()">remove item</a>
+        </li>
+      </ul>
+      <form ng-submit="toDoItem.addItem()">
+        <input type="text" ng-model="text" size="30" placeholder="add new todo here">
+        <input class="btn-primary" type="submit" value="add">
+      </form>
+    </div>
+  </div>
+
+  <div style="display: block">
+    <h2>Summary</h2>
+    <div>
+      <ul class="unstyled">
+        <li> Completed Todos: 2 </li>
+        <li> Uncompleted Todos: 1 </li>
+        <li> Total Todos: 3 </li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+
+</html>

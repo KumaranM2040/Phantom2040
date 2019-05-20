@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Example - example-controller-scope-inheritance-production</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+    <style>
+        div.spicy div {
+            padding: 10px;
+            border: solid 2px blue;
+        }
+    </style>
+    <script>
+        (function (angular) {
+            'use strict';
+            var myApp = angular.module('scopeInheritance', []);
+            myApp.controller('MainController', ['$scope', function ($scope) {
+                $scope.timeOfDay = 'morning';
+                $scope.name = 'Annie';
+            }]);
+            myApp.controller('ChildController', ['$scope', function ($scope) {
+                $scope.name = 'Betty';
+            }]);
+            myApp.controller('GrandChildController', ['$scope', function ($scope) {
+                $scope.timeOfDay = 'evening';
+                $scope.name = 'Craig';
+                $scope.info = function () {
+                    return {
+                        "scope.name": $scope.name,
+                        "scope.__proto__.name": $scope.__proto__.name,
+                        "scope.__proto__.__proto__.name": $scope.__proto__.__proto__.name,
+                    };
+                };
+
+            }]);
+        })(window.angular);
+    </script>
+
+</head>
+
+<body ng-app="scopeInheritance">
+    <div class="spicy">
+        <div ng-controller="MainController">
+            <p>Good {{timeOfDay}}, {{name}}!</p>
+
+            <div ng-controller="ChildController">
+                <p>Good {{timeOfDay}}, {{name}}!</p>
+
+                <div ng-controller="GrandChildController">
+                    <p>Good {{timeOfDay}}, {{name}}!</p>
+                    <p>{{info()}}</p>
+                    <a href="" ng-click="name = 'David'">Click me to set 'name'</a>
+                    <div ng-if="info">
+                        <a href="" ng-click="name = 'Mark (ng-if has its own scope!)'">
+                            Click me to set the 'name' within an ng-if:
+                        </a>
+                        <p>{{name}}</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

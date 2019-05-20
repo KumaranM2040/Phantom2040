@@ -1,0 +1,48 @@
+<style>
+    .box {
+        border-width: 5px;
+        border-style: solid;
+        border-color: rgba(46, 164, 54, 0.72);
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .error-message {
+        border-color: rgba(204, 28, 28, 0.883);
+    }
+</style>
+
+<div ng-if="$ctrl.viewModel.koans.length > 0 && $ctrl.viewModel.unCompletedKoans.length === 0">
+    <h2>Congratulations! 🎉 You are all done! 🎆🎊</h2>
+</div>
+
+<div ng-if="$ctrl.viewModel.current">
+    <h2>Current Koan:</h2>
+    <div class="box">
+        <h3>➯{{$ctrl.viewModel.current.name}}</h3>
+        <h4>{{$ctrl.viewModel.message}} 🔎</h4>
+        <div ng-if="$ctrl.viewModel.error" class="box error-message">
+            {{$ctrl.viewModel.error.message}}
+        </div>
+        <!--
+              <div><b>{{$ctrl.viewModel.message}}🤔</b></div>
+            <h4>❌Error😭:<p>{{$ctrl.viewModel.error.message}}😭🔥</p></h4>
+            
+            <p>{{$ctrl.viewModel.message}}</p>
+            -->
+    </div>
+</div>
+
+<div ng-if="$ctrl.viewModel.completedKoans.length > 0">
+    <h2>Completed 👍</h2>
+    <ul>
+        <li ng-repeat="koan in $ctrl.viewModel.completedKoans">✅ {{koan.name}} 🔥</li>
+    </ul>
+</div>
+
+<div ng-if="$ctrl.viewModel.unCompletedKoans.length > 0">
+    <h2>Still coming</h2>
+    <ul>
+        <li ng-repeat="koan in $ctrl.viewModel.unCompletedKoans">💎 {{koan.name}}</li>
+    </ul>
+</div>

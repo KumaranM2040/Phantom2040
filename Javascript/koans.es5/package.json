@@ -1,0 +1,42 @@
+{
+  "name": "javascript.koans",
+  "version": "1.0.0",
+  "description": "learn javascript syntax with tdd",
+  "scripts": {
+    "live": "lite-server",
+    "build": "webpack -w --display-error-details",
+    "start": "npm-run-all --parallel build live",
+    "prestart": "npm install"
+  },
+  "keywords": [
+    "javascript",
+    "testing",
+    "lodash"
+  ],
+  "author": "mark.whitfeld@chillisoft.co.za",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "6.18.2",
+    "babel-loader": "6.2.7",
+    "mocha": "3.1.2",
+    "npm-run-all": "3.1.1",
+    "lite-server": "^2.3.0",
+    "webpack": "1.13.3",
+    "@types/babel-core": "^6.7.14",
+    "@types/chai": "^3.4.34",
+    "@types/istanbul": "^0.4.29",
+    "@types/mocha": "^2.2.32",
+    "@types/sinon": "^1.16.31",
+    "@types/webpack": "^1.12.35",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "chai": "^3.3.0",
+    "eslint": "^3.9.1",
+    "eslint-plugin-import": "^2.0.1",
+    "imports-loader": "^0.6.5",
+    "live-server": "^1.1.0",
+    "sinon": "^1.17.1",
+    "wallaby-webpack": "0.0.9"
+  }
+}

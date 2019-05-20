@@ -1,61 +1,157 @@
-# Logs
-logs
+# Ignore node modules
+AngularJS/node_modules
+Javascript/AdvJavascript/node_modules
+Javascript/AdvJavascript2/AdvJavascript/node_modules
+Build/CI/scripts/BuildEnvSettings.yml
+Build/CI/scripts/_SetBuildEnvCi.bat
+Build/CI/scripts/node_modules
+Build/CI/scripts/.buildVars.yml
+Docker/node_modules/
+Docker/Images/**/bin/
+Docker/containerVersions.yml
+Legacy/Application/SAHL.Web/Config/*.config
+!Legacy/Application/SAHL.Web/Config/*.release.config
+!Legacy/Application/SAHL.Web/Config/*.development.config
+!Legacy/Application/SAHL.Web/Config/*.xsd
+Legacy/Applications/SAHL.Web.Services/SAHL.Web.Services.Internal/SAHL.Web.Services.Internal/Config/*.config
+*scc
+*.suo
+obj/
+bin/
+Build/NodeJS/node_modules
+**/*.sln.ide/*
+**/.tmp/
+*.bak
+*.cache
+*.dbmdl
+*.ldf
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.mdf
+*.ncrunchsolution.user
+*.orig
+*.sublime-project
+*.sublime-workspace
+*.user
+*.VisualState.xml
+*/src/Nuget/*
+*/StoredText/*
+*TestResult.xml
+.idea/
+.sonar/
+.tmp/*
+Binaries/ExternalBinaries/DecisionTree/*
+DecisionTrees/SAHL.DecisionTree.Shared/*
+DecisionTrees/SAHL.DecisionTree.Shared.Tests/*
+DecisionTrees/SAHL.Services.Interfaces.DecisionTree/*
+DecisionTrees/SAHL.DecisionTree.Shared.*
+DecisionTrees/SAHL.DecisionTree.Shared.Tests.*
+DecisionTrees/SAHL.Services.DecisionTree.Shared.*
+DecisionTrees/BuildArtifacts/*
+Services/DecisionTree.Shared/*
+/Docker/Images/*
+#*.ncrunchproject
+#*.ncrunchsolution
+*.ncrunchproject
+/**/_NCrunch*/*
+/**/_NCrunch*/**/*
+/Binaries/Nuget/*
+_Chutzpah*
+_NCrunch_SAHL.Core
+Application/SAHL.Web.Services/SAHL.Web.Services.Test/Config/*.config
+Binaries/InternalBinaries/*
+Binaries/Tools/*
+!/Binaries/Tools/General/
+Binaries/Tools/General/*
+!/Binaries/Tools/General/Halo.Tools.*
+!Binaries/Tools/General/readme.txt
+Build/Tools/ConfigTransformationTool.1.2.0.0/lib/logs/
+Decision Trees/src/SAHL.DecisionTree.Shared/Globals/*
+!Decision Trees/src/SAHL.DecisionTree.Shared/Globals/Readme.txt
+Decision Trees/src/SAHL.DecisionTree.Shared/Trees/*
+!Decision Trees/src/SAHL.DecisionTree.Shared/Trees/Readme.txt
+Decision Trees/src/SAHL.DecisionTree.TreeTests/TreeTests/*
+Legacy/DomainService/DomainServiceBinaries/*
+Legacy/FrameWork/Internal Binaries/*
+Legacy/Internal Binaries/*
+Legacy/Tools/SAHL.Tools/Tool Binaries/*
+Legacy/WorkFlowMaps/**/Binaries/
+Lighthouse/PrecompiledWeb/
+publishoutput/
+Services/X2.Shared/src/ScenarioMaps/**/Binaries/
+*\src\Nuget\*
+Services/DecisionTree.Shared/src/SAHL.Services.Interfaces.DecisionTree/Models/*
+Services/DecisionTree.Shared/src/SAHL.Services.Interfaces.DecisionTree/Queries/*
+Services/DomainProcessManager/_NCrunch_DomainProcessManager/*
+Services/X2.Shared/src/SAHL.X2Engine2/Copy.bat
+Services/X2.Shared/src/ScenarioMaps/*/Binaries/*
+syntax: glob
+Tools/SAHL.X2Designer/SAHL.X2Designer.Setup/SAHL.X2Designer.Setup/
+Tools/X2SecurityReCalculator/X2SecurityReCalculator.Setup/Express
+Legacy/Automation.Test/HaloTestAutomation/nunit-results-1.1-bin/Error Reports/*
+/Legacy/Automation.Test/HaloTestAutomation/Release/*.dll
+syntax: glob
+Application/SAHL.Web.Services/SAHL.Web.Services.Test/Config/*.config
+*.rdl.data
+WorkFlowMaps/**/Binaries/
+Binaries/ClientScripts/Internal/
+Binaries/ClientScripts/Generated/
+Binaries/NuGet/SAHL*
+Binaries/LegacyBinaries/*
+WebSites/Capitec/src/SAHL.Website.Capitec/app/SAHL.DecisionTree.Shared.Globals.js
+WebSites/Capitec/src/SAHL.Website.Capitec/app/SAHL.DecisionTree.Shared.Fake.Globals.js
+Services/DomainProcessManager/_NCrunch_DomainProcessManager/*
+/Legacy/Automation.Test/HaloTestAutomation/Release/*.config
+/Legacy/Automation.Test/HaloTestAutomation/Release/*.xml
+Services/DomainServices/LifeDomainService.Shared/*/*.ncrunchproject
+Legacy/FrameWork.Test/*/*.ncrunchproject
+Legacy/DomainService/DomainService2.V3.Client/DomainService2.V3.Client.v2.ncrunchproject
+WebSites/Capitec/src/SAHL.Website.Capitec/app/SAHL.Services.Interfaces.*.js
+WebSites/Capitec/src/SAHL.Website.Capitec/app/templates.js
+WebSites/Capitec/src/SAHL.Website.Capitec/lib/specs/SAHL.Services.Interfaces.*.js
+WebSites/DecisionTree/src/SAHL.Website.DecisionTree/app/SAHL.Services.Interfaces.*.js
+WebSites/DecisionTree/src/SAHL.Website.DecisionTree/app/templates.js
+WebSites/Halo/SAHL.Websites.Halo/app/template.min.js
+WebSites/Halo/SAHL.Websites.Halo/app/template.min.js.map
+WebSites/Halo/SAHL.Websites.Halo/apps/
+WebSites/Halo/SAHL.Websites.Halo/charms/
+WebSites/Halo/SAHL.Websites.Halo/lib/
+WebSites/Halo/SAHL.Websites.Halo/less/**/*.css
+WebSites/Halo/SAHL.Websites.Halo/less/**/*.map
+WebSites/Halo/SAHL.Websites.Halo/less/sahl.ui.core/**/*.*
+WebSites/Halo/SAHL.Websites.Halo/css/sahl.ui.core/*
+WebSites/Halo/SAHL.Websites.Halo/less/sahl.ui.core/*
+WorkFlowMaps/*/Reports/
+working/
+workspace.xml
+Web/SAHL.JS.Workflow/intergrationTests/lib/workflowManager/
+Testing/SAHL.Testing.CommandsQueries/filespecs.txt
+Testing/SAHL.WebSites.Halo/reports
+Shared/SAHL.Shared.BusinessModel.API/Blueprints/PublicOrigination/node_modules
+Testing/**/node_modules
+**/.vs
+Legacy/Automation.Test/HaloTestAutomation/TestResults/*
+Legacy/DomainService/packages/
+Legacy/Application/packages/
+*.iml
+Testing/SAHL.Testing.Services/Build/ConfigTransforms/App.config
+testbuildoutput/*
+Testing/**/*.ncrunchproject
+buildoutput/
+deploypackages/
+test-output/
+coverage/
+packages/
+Tools/X2.Applications/src/SAHL.X2Designer/Cache/
+*.ncrunchproject
+*.ncrunchsolution
+!Build/Tools/DecisionTreeGenerator/*
+!Binaries/Nuget/*
+*.dt
+**/default.dev.aspx
+**/sahl.yaml.configuration/*
+**/sahl.services.interfaces.test.fakes/*
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Directory for instrumented libs generated by jscoverage/JSCover
-lib-cov
-
-# Coverage directory used by tools like istanbul
-coverage
-
-# nyc test coverage
-.nyc_output
-
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
-# Bower dependency directory (https://bower.io/)
-bower_components
-
-# node-waf configuration
-.lock-wscript
-
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
-
-# Dependency directories
-node_modules/
-jspm_packages/
-
-# TypeScript v1 declaration files
-typings/
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# dotenv environment variables file
-.env
-
-# next.js build output
-.next
+.vscode/
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
