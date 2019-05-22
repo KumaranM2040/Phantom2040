@@ -7,3 +7,4 @@ esdoc/
 test/dist/*
 solutions/
 yarn.lock
+Javascript/Node/01-understanding-npm-scripts/node_modules/
