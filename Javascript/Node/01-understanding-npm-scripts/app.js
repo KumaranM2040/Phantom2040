@@ -17,7 +17,7 @@ app.use(shopRoutes);
 app.use(express.static('public'));
 
 app.use((req, res,next)=> {
-  res.status(404).render('error-404');
+  res.status(404).render('error-404', {pageTitle: 'Page not Found'});
 })
 
 app.listen(3000);
