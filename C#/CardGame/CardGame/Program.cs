@@ -79,7 +79,6 @@ namespace CardGame
 
         private static void CalculateWinner()
         {
-            var numberOfPlayers = 4;
             var playersByTotal = players.OrderByDescending(x => x.Cards.Sum(y => y.Value));
             var playResults = new SortedDictionary<int, object>();
             bool firstPossibleWinner = false;
