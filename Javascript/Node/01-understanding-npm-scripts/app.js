@@ -1,13 +1,22 @@
-const express = require('express');
 const path = require('path');
 
+const express = require('express');
 const bodyParser = require('body-parser');
+const expressHbs = require('express-handlebars');
+
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
 const app = express();
 
-app.set('view engine', 'pug');
+app.engine('hbs', expressHbs({
+  extname: '.hbs',
+  defaultLayout: 'error-404',
+  partialsDir: path.join(__dirname, 'views/partials'),
+  layoutsDir: path.join(__dirname, 'views')
+}))
+//app.set('view engine', 'pug');
+app.set('view engine', 'hbs');
 
 app.use(bodyParser.urlencoded({extended: false}));
 
