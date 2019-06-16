@@ -1,0 +1,65 @@
+doctype html
+head
+  meta(charset='utf-8')
+  meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+  meta(name='description', content='')
+  meta(name='author', content='Mark Otto, Jacob Thornton, and Bootstrap contributors')
+  meta(name='generator', content='Jekyll v3.8.5')
+  title Add Product
+  link(rel='canonical', href='https://getbootstrap.com/docs/4.3/examples/jumbotron/')
+  // Bootstrap core CSS
+  link(href='/docs/4.3/dist/css/bootstrap.min.css', rel='stylesheet', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
+  style.
+    .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    }
+    @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+    }
+    }
+  // Custom styles for this template
+  link(href='../jumbotron.css', rel='stylesheet')
+nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark
+  a.navbar-brand(href='/') Home
+  button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarsExampleDefault', aria-controls='navbarsExampleDefault', aria-expanded='false', aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  #navbarsExampleDefault.collapse.navbar-collapse
+    ul.navbar-nav.mr-auto
+      li.nav-item.active
+        a.nav-link(href='/')
+          | Shop 
+          span.sr-only (current)
+      li.nav-item.active
+        a.nav-link(href='/admin/add-product') Add Product
+      li.nav-item
+        a.nav-link.disabled(href='#') Disabled
+      li.nav-item.dropdown
+        a#dropdown01.nav-link.dropdown-toggle(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
+        .dropdown-menu(aria-labelledby='dropdown01')
+          a.dropdown-item(href='#') Action
+          a.dropdown-item(href='#') Another action
+          a.dropdown-item(href='#') Something else here
+    form.form-inline.my-2.my-lg-0
+      input.form-control.mr-sm-2(type='text', placeholder='Search', aria-label='Search')
+      button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+main(role='main')
+  // Main jumbotron for a primary marketing message or call to action
+  .jumbotron
+    .container
+      h1.display-3 Welcome to the Phantom Zone
+      p This is Admin only Portal where Product can be added
+      form.form-inline.my-2.my-lg-0(action='/admin/add-product', method='POST')
+        input.form-control.mr-sm-2(type='text', placeholder='Product', name='Product')
+        input.btn.btn-primary.my-0.my-sm-2(type='submit', value='Add Product'  )
+footer.container
+  p &copy; Company 2017-2019
+script(src='../jquery-3.3.1.slim.min.js', integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo', crossorigin='anonymous')
+script.
+  window.jQuery || document.write('<script src="../docs/4.3/assets/js/vendor/jquery-slim.min.js"><\\/script>')
+script(src='../docs/4.3/dist/js/bootstrap.bundle.min.js', integrity='sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o', crossorigin='anonymous')
