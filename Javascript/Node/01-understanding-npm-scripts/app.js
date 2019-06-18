@@ -11,7 +11,7 @@ const app = express();
 
 app.engine('hbs', expressHbs({
   extname: '.hbs',
-  defaultLayout: 'error-404',
+  defaultLayout: 'shop',
   partialsDir: path.join(__dirname, 'views/partials'),
   layoutsDir: path.join(__dirname, 'views')
 }))
