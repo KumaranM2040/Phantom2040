@@ -12,3 +12,12 @@
 .icon-block .material-icons {
 	font-size: inherit;
 }
+
+.custom-font-weight{
+  font-weight: bold;
+}
+
+ td.less-padding, th.less-padding {
+  padding: 3px 2px;
+  font-size:12px;
+}
