@@ -34,6 +34,23 @@ th.inverted-colour{
   border-radius: 0px;
 }
 
+p.footer-centre{
+  text-align: center;
+  font-size:10px;
+  font-family: sans-serif;
+  margin: 0px 0px;
+}
+
+p.footer-tiny{
+  text-align: center;
+  font-size:9px;
+  font-family: sans-serif;
+  margin: 0px 0px;
+}
+
+br.tiny{
+  font-size:9px;
+}
 .container {
   font-size:12px;
 }
