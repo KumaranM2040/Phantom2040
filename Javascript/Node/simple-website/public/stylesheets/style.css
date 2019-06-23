@@ -21,3 +21,19 @@
   padding: 3px 2px;
   font-size:12px;
 }
+
+td.align-right, th.align-right {
+  text-align: right;
+}
+
+th.inverted-colour{
+  font-weight:bold;
+  background-color:#000000;
+  color:#ffffff;
+  border-color:inherit;
+  border-radius: 0px;
+}
+
+.container {
+  font-size:12px;
+}
