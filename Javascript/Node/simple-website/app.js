@@ -63,11 +63,12 @@ function ParseExtract() {
   var file = fs.createReadStream('C:\\Work\\EmailingLoanStatementsToClient\\SAHL_LoanStatements_20190523\\SAHL_LoanStatements_20190523.txt');
   file.on('data', (chunk) => {
     console.log(`Received ${chunk.length} bytes of data.`);
-    buffer = HandleChunk(chunk, statementObject, buffer, 0);
+    buffer = HandleChunk(chunk, statementObject, buffer, chunk.length);
     console.log(buffer);
   });
   file.on('end', () => {
     console.log('There will be no more data.');
+    HandleChunk("\r\n", statementObject, buffer, 1);
   });
 }
 ParseExtract();
@@ -94,6 +95,7 @@ function HandleChunk(chunk, statementObject, buffer, size) {
     
     let index = 0;
     let finalStartSequence = 0;
+    let accountCount = 0;
     
     let newlines = chunkstr.split('\r\n');
     if (buffer.length)
@@ -101,11 +103,16 @@ function HandleChunk(chunk, statementObject, buffer, size) {
       newlines.splice(0,0,...buffer);
       let firstLineInNewBuffer = newlines[buffer.length];
       let lastLineInPreviousBuffer = newlines[buffer.length-1];
-      console.log(lastLineInPreviousBuffer.length);
+      console.log(lastLineInPreviousBuffer);
       /* concatenate the strings and strip of line breaks as this is done after the initial tokenisation */
       newlines[buffer.length-1] = lastLineInPreviousBuffer.concat(firstLineInNewBuffer).replace(/(\r\n|\n|\r)/gm,"");
       newlines.splice(buffer.length,1);
-      console.log(newlines[buffer.length-1].length);
+      console.log('Buffer A:\r\n'+ lastLineInPreviousBuffer + '\r\nBuffer B:\r\n'+ newlines[buffer.length-1]);
+      //console.log(newlines[buffer.length-1].length);
+      if (lastLineInPreviousBuffer.length !==  newlines[buffer.length-1].length)
+      {
+        console.log('actually added something');
+      }
     }
     newlines.forEach(line => {
       if (line.startsWith('Section|')) {
@@ -116,13 +123,18 @@ function HandleChunk(chunk, statementObject, buffer, size) {
     
       if (line.startsWith('N/A|')) {
         finalStartSequence = index;
-        console.log(line);
+        accountCount++;
       }
       index++;
     });
-    buffer = newlines.slice(finalStartSequence, index);
-    //console.log(chunk.toString(););
-    //size = ParseChunk(chunk, statementObject, buffer, size);
+    //if (size === 65536){
+      buffer = newlines.slice(finalStartSequence, index);
+      newlines.splice(finalStartSequence,index-finalStartSequence);
+    // }
+    // else{
+    //   console.log(size);
+    // }
+    ParseAccounts(newlines, statementObject, accountCount, size);
   }
   return buffer;
 }
@@ -137,17 +149,34 @@ function ParseTableHeaders(tokens) {
   });
 }
 
-function ParseChunk(chunk, statementObject, buffer, size) {
-  let chunkstr = chunk.toString();
-  let tokens = chunkstr.split('|');
-  let newlines = chunkstr.split('\n');
+function ParseAccounts(newlines, statementObject, accountCount) {
+  //statementObject.accounts
+  let account = null;
   newlines.forEach(line => {
-    
     if (line.startsWith('N/A|')) {
-      console.log(line);
+      if (account)
+      {
+        statementObject.accounts.push(account);
+      }
+      account = { columns: [], tableRowdata: [ ]};
+      let tokens = TokeniseString(line);
+      tokens.forEach(token => {
+        account.columns.push(token);
+      });
+    }
+
+    if (account) {
+      let tokens = TokeniseString(line);
+      let row = {columns: [] };
+      tokens.forEach(token => {
+        row.columns.push(token);
+      });
+      account.tableRowdata.push(row);
     }
   });
-  ParseTableHeaders(tokens);
-  return size;
+  if (account)
+  {
+    statementObject.accounts.push(account);
+  }
 }
 
