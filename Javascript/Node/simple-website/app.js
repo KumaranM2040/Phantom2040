@@ -41,63 +41,30 @@ function TokeniseString(line) {
 }
 
 function ParseGlobalExtractHeaders(globalHeaders) {
-  let model = {};
+  let model = { columns : [], length: 0};
   let tokens = TokeniseString(globalHeaders);
-  model.columns = [];
   console.log(tokens[0]);
   tokens.forEach(token => {
     if (isNaN(token)) {
       model.columns.push(token);
     }
   });
-  return model.columns;
+  model.length = globalHeaders.length;
+  return model;
 }
 
-function ParseTableHeaders(tokens) {
-  let model = {};
-  model.columns = [];
-  console.log(tokens[0]);
-  tokens.forEach(token => {
-    if (isNaN(token)) {
-      model.columns.push(token);
-    }
-  });
-}
 
 function ParseExtract() {
-  const buffer = Buffer.allocUnsafe(5 * 1024 * 1024);
+  let buffer = [];
   const statementObject = {
     accounts: [],
     TableHeaders: []
   };
-  const size = 0;
   var file = fs.createReadStream('C:\\Work\\EmailingLoanStatementsToClient\\SAHL_LoanStatements_20190523\\SAHL_LoanStatements_20190523.txt');
   file.on('data', (chunk) => {
     console.log(`Received ${chunk.length} bytes of data.`);
-    if (chunk.length) {
-      console.log(chunk.length);
-      //console.log(chunk.toString(););
-      let chunkstr = chunk.toString();
-
-      let tokens = chunkstr.split('|');
-      let newlines = chunkstr.split('\n');
-      newlines.forEach(line => {
-        if (line.startsWith('Section')) {
-          let globalHeader = ParseGlobalExtractHeaders(newlines[0]);
-          console.log(globalHeader);
-          statementObject.TableHeaders = globalHeader;
-        }
-        if (line.startsWith('N/A|')) {
-          console.log(line);
-        }
-      });
-
-      ParseTableHeaders(tokens);
-      buffer.write(chunkstr);
-      size += chunk.length;
-
-
-    }
+    buffer = HandleChunk(chunk, statementObject, buffer, 0);
+    console.log(buffer);
   });
   file.on('end', () => {
     console.log('There will be no more data.');
@@ -116,3 +83,71 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+
+function HandleChunk(chunk, statementObject, buffer, size) {
+  if (chunk.length) {
+    console.log(chunk.length);
+    let chunkstr = chunk.toString();
+
+    
+    
+    
+    let index = 0;
+    let finalStartSequence = 0;
+    
+    let newlines = chunkstr.split('\r\n');
+    if (buffer.length)
+    {
+      newlines.splice(0,0,...buffer);
+      let firstLineInNewBuffer = newlines[buffer.length];
+      let lastLineInPreviousBuffer = newlines[buffer.length-1];
+      console.log(lastLineInPreviousBuffer.length);
+      /* concatenate the strings and strip of line breaks as this is done after the initial tokenisation */
+      newlines[buffer.length-1] = lastLineInPreviousBuffer.concat(firstLineInNewBuffer).replace(/(\r\n|\n|\r)/gm,"");
+      newlines.splice(buffer.length,1);
+      console.log(newlines[buffer.length-1].length);
+    }
+    newlines.forEach(line => {
+      if (line.startsWith('Section|')) {
+        let globalHeader = ParseGlobalExtractHeaders(line);
+        console.log(globalHeader);
+        statementObject.TableHeaders = globalHeader;
+      }
+    
+      if (line.startsWith('N/A|')) {
+        finalStartSequence = index;
+        console.log(line);
+      }
+      index++;
+    });
+    buffer = newlines.slice(finalStartSequence, index);
+    //console.log(chunk.toString(););
+    //size = ParseChunk(chunk, statementObject, buffer, size);
+  }
+  return buffer;
+}
+function ParseTableHeaders(tokens) {
+  let model = {};
+  model.columns = [];
+  console.log(tokens[0]);
+  tokens.forEach(token => {
+    if (isNaN(token)) {
+      model.columns.push(token);
+    }
+  });
+}
+
+function ParseChunk(chunk, statementObject, buffer, size) {
+  let chunkstr = chunk.toString();
+  let tokens = chunkstr.split('|');
+  let newlines = chunkstr.split('\n');
+  newlines.forEach(line => {
+    
+    if (line.startsWith('N/A|')) {
+      console.log(line);
+    }
+  });
+  ParseTableHeaders(tokens);
+  return size;
+}
+
