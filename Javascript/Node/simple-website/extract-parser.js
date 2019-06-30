@@ -1,8 +1,11 @@
 const fs = require('fs');
 
+var chunkSize = 65536;
+const bigfile = 'C:\\Work\\EmailingLoanStatementsToClient\\SAHL_LoanStatements_20190523\\SAHL_LoanStatements_20190523.txt';
+
 const statementObject = {
     accounts: [],
-    TableHeaders: []
+    TableHeaders: {}
 };
 
 function TokeniseString(line) {
@@ -24,15 +27,12 @@ function ParseGlobalExtractHeaders(globalHeaders) {
     model.length = globalHeaders.length;
     return model;
 }
-
-
-function ParseExtract() {
+function ParseExtractUsingStream(){
     let buffer = [];
-    var file = fs.createReadStream('C:\\Work\\EmailingLoanStatementsToClient\\SAHL_LoanStatements_20190523\\SAHL_LoanStatements_20190523.txt');
+    var file = fs.createReadStream(bigfile);
     file.on('data', (chunk) => {
         console.log(`Received ${chunk.length} bytes of data.`);
         buffer = HandleChunk(chunk, statementObject, buffer, chunk.length);
-        console.log(buffer);
     });
     file.on('end', () => {
         console.log('There will be no more data.');
@@ -40,9 +40,46 @@ function ParseExtract() {
     });
 }
 
+function ParseExtractUsingReadChunk(){
+    let buffer = [];
+    var buf1 = Buffer.alloc(chunkSize), buf2 = Buffer.alloc(chunkSize);
+    var fd = fs.openSync(bigfile, 'r');
+    fs.read(fd, buf1, 0, chunkSize, null, function r(err, sz) {
+        if(!sz) {
+            fs.closeSync(fd);
+            if (buffer.length){
+                HandleChunk("\r\n", statementObject, buffer, 1);
+            }
+            return;
+        }
+        fs.read(fd, buf2, 0, chunkSize, null, function(err, sz) {
+            if(!sz) {
+                fs.closeSync(fd);
+                if (buffer.length){
+                    HandleChunk("\r\n", statementObject, buffer, 1);
+                }
+                return;
+            }
+            fs.read(fd, buf1, 0, chunkSize, null, r);
+            buffer = HandleChunk(buf2.slice(0, sz), statementObject, buffer, sz);
+            //hash.update(buf2.slice(0, sz));
+        });
+        buffer = HandleChunk(buf1.slice(0, sz), statementObject, buffer, sz);
+        //hash.update(buf1.slice(0, sz));
+    });
+}
+
+function ParseExtract() {
+    ParseExtractUsingReadChunk();
+    //ParseExtractUsingStream();
+}
+
 function HandleChunk(chunk, statementObject, buffer, size) {
+    if (size< 65536) 
+    {
+        console.log(size);
+    }
     if (chunk.length) {
-        console.log(chunk.length);
         let chunkstr = chunk.toString();
         let index = 0;
         let finalStartSequence = 0;
@@ -53,7 +90,7 @@ function HandleChunk(chunk, statementObject, buffer, size) {
             newlines.splice(0, 0, ...buffer);
             let firstLineInNewBuffer = newlines[buffer.length];
             let lastLineInPreviousBuffer = newlines[buffer.length - 1];
-            console.log(lastLineInPreviousBuffer);
+            //console.log(lastLineInPreviousBuffer);
             /* concatenate the strings and strip of line breaks as this is done after the initial tokenisation */
             //newlines[buffer.length-1] = lastLineInPreviousBuffer.concat(firstLineInNewBuffer).replace(/(\r\n|\n|\r)/gm,"");
             let combinedLine = lastLineInPreviousBuffer.concat(firstLineInNewBuffer);
@@ -107,15 +144,18 @@ function ParseAccounts(newlines, statementObject, accountCount) {
     let account = null;
     newlines.forEach(line => {
         if (line.startsWith('N/A|')) {
+            let count = 0;
             if (account) {
                 statementObject.accounts.push(account);
             }
             account = {
+                details:{},
                 columns: [],
                 tableRowdata: []
             };
             let tokens = TokeniseString(line);
             tokens.forEach(token => {
+                account.details[statementObject.TableHeaders.columns[count++]]=token;
                 account.columns.push(token);
             });
         }
