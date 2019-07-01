@@ -1,5 +1,6 @@
 const fs = require('fs');
-
+var es = require('event-stream');
+ 
 var chunkSize = 65536;
 const bigfile = 'C:\\Work\\EmailingLoanStatementsToClient\\SAHL_LoanStatements_20190523\\SAHL_LoanStatements_20190523.txt';
 
@@ -40,6 +41,18 @@ function ParseExtractUsingStream(){
     });
 }
 
+function ParseExtractUsingEventStream(){
+    let buffer = [];
+    var file = fs.createReadStream(bigfile)
+    .pipe(es.split('\r\n'))
+    .pipe(es.map(function (line, cb) {
+    //do something with the line 
+    console.log(line);
+    cb(null, line)
+  }))
+}
+
+
 function ParseExtractUsingReadChunk(){
     let buffer = [];
     var buf1 = Buffer.alloc(chunkSize), buf2 = Buffer.alloc(chunkSize);
@@ -70,8 +83,9 @@ function ParseExtractUsingReadChunk(){
 }
 
 function ParseExtract() {
-    ParseExtractUsingReadChunk();
+    //ParseExtractUsingReadChunk();
     //ParseExtractUsingStream();
+    ParseExtractUsingEventStream();
 }
 
 function HandleChunk(chunk, statementObject, buffer, size) {

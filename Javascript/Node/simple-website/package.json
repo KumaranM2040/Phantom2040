@@ -8,6 +8,7 @@
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "event-stream": "^4.0.1",
     "express": "~4.16.1",
     "express-nunjucks": "^2.2.3",
     "http-errors": "~1.6.3",
