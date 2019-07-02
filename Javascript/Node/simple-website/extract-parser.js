@@ -48,7 +48,7 @@ function ParseExtractUsingEventStream() {
             if (account){
                 statementObject.accounts.push(account);
             }
-        }),);
+        }));
 }
 
 function ParseExtract() {
@@ -69,19 +69,30 @@ function ParseAccountsByLine(line, statementObject, account) {
         };
         let tokens = TokeniseString(line);
         tokens.forEach(token => {
-            account.details[statementObject.GlobalColumnHeaders.columns[count++]] = token;
-            account.columns.push(token);
+            if (token==="")
+            {
+                count++;
+            }
+            else{
+                account.details[statementObject.GlobalColumnHeaders.columns[count++]] = token;
+            }
         });
         return account;
     }
 
     if (account) {
         let tokens = TokeniseString(line);
+        let count=0;
         let row = {
             columns: []
         };
         tokens.forEach(token => {
-            row.columns.push(token);
+            if (token === "")
+            {
+                count++;
+            }else{
+                row.columns[count++] = token;
+            }
         });
         account.tableRowdata.push(row);
     }
