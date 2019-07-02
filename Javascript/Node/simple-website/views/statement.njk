@@ -41,23 +41,23 @@
               <tbody>
                 <tr>
                   <td class="custom-font-weight less-padding">Account Number:</td>
-                  <td class="less-padding">123456789</td>
+                  <td class="less-padding">{{account.AccountNumber}}</td>
                 </tr>
                 <tr>
                   <td class="custom-font-weight less-padding">Loan Agreement Amount:</td>
-                  <td class="less-padding">R595 918.40</td>
+                  <td class="less-padding">R{{account.LoanAgreementAmount}}</td>
                 </tr>
                 <tr>
                   <td class="custom-font-weight less-padding">Remaining Term:</td>
-                  <td class="less-padding">71</td>
+                  <td class="less-padding">{{account.RemainingTerm}}</td>
                 </tr>
                 <tr>
                   <td class="custom-font-weight less-padding">Closing Balances as at:</td>
-                  <td class="less-padding">21/05/2019</td>
+                  <td class="less-padding">{{account.StatementDate}}</td>
                 </tr>
                 <tr>
-                  <td class="custom-font-weight less-padding">Interest Rate as at 21/05/2019:</td>
-                  <td class="less-padding">8.70%</td>
+                  <td class="custom-font-weight less-padding">Interest Rate as at {{account.StatementDate}}:</td>
+                  <td class="less-padding">{{account.LoanRateVariable}}%</td>
                 </tr>
               </tbody>
             </table>
