@@ -1,1 +1,8 @@
-{% if account.Address and showUsers %}...{% endif %}
+{% for address in account.combinedAddress %}
+{% if address %}
+{{address}}<br>
+{% endif %}
+{% endfor %}
+
+
+
