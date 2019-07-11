@@ -1,0 +1,59 @@
+{% block body %}
+
+<body>
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <div>
+        <div class="row">
+          <div class="col s4">
+            <div class="card darken-1">
+              <div class="card-content black-text">
+                <p>{{account.NameLine1}} <br>
+                  {% include "addressName.njk" %}
+                  <br>
+                  <br>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col s6">
+            <div>
+              {% include "sahl_details.njk" %}
+            </div>
+          </div>
+          <div class="col s2">
+            <img class="responsive-img" src="images/smallest.png" alt="SA Homeloans Logo">
+          </div>
+        </div>
+        {% include "statement.njk" %}
+        {% include "transactions.njk" %}
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col s12">
+          <p class="footer-centre"><b>SA Home Loans (Pty) Ltd</b> (Registration Number:2006/035436/07), 2 Milkwood
+            Crescent, Milkwood Park, La Lucia Ridge, 4051, PO Box 3918, Durban, 4000.<br>
+            <b>Head Office</b> Tel: 031 560 5300, Fax: 031 562 0362 <b>Client Services</b> Tel: 0861 888 777, Fax: 031
+            571 3150 <b>Email: admin@sahomeloans.com</b><br>
+            <b>www.sahomeloans.com</b>
+          </p>
+          <br>
+          <p class="footer-tiny">Directors: Executive: K L Penwarden, C Swainston Harrison; Non-Executive: L McCarthy, K
+            Makeke, K S Maponya (Alternate: N Mazibuko), R Rajdhar,<br>
+            W M Maseka (Zimbabwe), B P Madungandaba (Alternate: M R Bantsi).<br>
+            SA Homeloans is a Registered Credit Provider (Registration Number: NCRCP1735).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="javascripts/materialize.js"></script>
+  <script src="javascripts/init.js"></script>
+
+</body>
+
+{% endblock %}
