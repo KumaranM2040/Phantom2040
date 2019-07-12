@@ -30,35 +30,52 @@
       <tbody>
         <tr>
           <td class="custom-font-weight less-padding">Home Loan Instalment:</td>
-          <td class="less-padding">R5 495.87</td>
+          <td class="less-padding">R{{account.HomeLoanInstalment}}</td>
         </tr>
         <tr>
           <td class="custom-font-weight less-padding">Hoc Premium:</td>
-          <td class="less-padding">R605.05</td>
+          <td class="less-padding">R{{account.HOCPremium}}</td>
         </tr>
         <tr>
           <td class="custom-font-weight less-padding">Bond Protection Plan:</td>
-          <td class="less-padding">R194.02</td>
+          <td class="less-padding">R???</td>
         </tr>
         <tr>
           <td class="custom-font-weight less-padding">Monthly Service Fee:</td>
-          <td class="less-padding">R57.50</td>
+          <td class="less-padding">R{{account.MonthlyServiceFee}}</td>
         </tr>
         <tr>
           <td class="custom-font-weight less-padding">Total Monthly Instalment:</td>
-          <td class="less-padding">R6 352.44</td>
+          <td class="less-padding">R{{account.TotalMonthlyInstalment}}</td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="col s12">
+  <div class="col s6">
     <table>
       <tbody>
         <tr>
-          <td class="custom-font-weight less-padding">Bank Account designated for Debit Order payment (if
-            applicable): Mr Joe Dirt</td>
-          <td class="less-padding">Capitec</td>
-          <td class="less-padding">*******123</td>
+          <td class="custom-font-weight less-padding">Bank Account designated for Debit Order payment:</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+   <div class="col s6">
+    <table>
+      <tbody>
+        <tr>
+          <td class="less-padding">{{account.NameLine1}}</td>
+          <td class="less-padding">{{account.Bank}}</td>
+          <td class="less-padding">{{account.BankAccountNumber}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+   <div class="col s2">
+    <table>
+      <tbody>
+        <tr>
+
         </tr>
       </tbody>
     </table>

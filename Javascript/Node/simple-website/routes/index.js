@@ -13,6 +13,9 @@ router.get('/', function(req, res, next) {
   console.log(account);
   console.log(numberWithSpaces(account.LoanAgreementAmount));
   account.LoanAgreementAmount = numberWithSpaces(account.LoanAgreementAmount);
+  account.HomeLoanInstalment = numberWithSpaces(account.HomeLoanInstalment);
+  account.HOCPremium = numberWithSpaces(account.HOCPremium);
+  account.TotalMonthlyInstalment = numberWithSpaces(account.TotalMonthlyInstalment);
   res.render('index', { title: 'Express', account});
 });
 
