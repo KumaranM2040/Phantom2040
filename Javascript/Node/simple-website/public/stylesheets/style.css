@@ -48,12 +48,21 @@ p.footer-tiny{
   margin: 0px 0px;
 }
 
+.page-footer, .page-footer-space {
+  height: 150px;
+}
+
 .page-footer {
   position: fixed;
   bottom: 0;
   color:black;
   background: transparent;
 }
+
+.page {
+  page-break-after: always;
+}
+
 @page {
   margin: 2mm
 }

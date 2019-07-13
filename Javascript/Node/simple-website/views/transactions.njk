@@ -1,4 +1,5 @@
 <div class="row" style="border:2px solid #000;">
+    <div class="page">
     <table>
         <thead>
             <tr>
@@ -15,17 +16,29 @@
         <tbody>
             {% for transaction in transactions %}
             <tr>
-                {% for column in transaction.columns %}
-                    {% if column=='undefined' %}
-                        <td class="{{"less-padding" if loop.index0 else "less-padding align-right"}}"></td>
-                    {% elif column=='R0' %}
-                        <td class="less-padding"></td>
-                    {% else %}
-                        <td class="{{"less-padding" if not loop.index0 else "less-padding align-right"}}">{{ column }}</td>
-                    {% endif %}
-                {% endfor %}
+
+                    {% for column in transaction.columns %}
+                        {% if column=='undefined' %}
+                            <td class="{{"less-padding" if loop.index0 else "less-padding align-right"}}"></td>
+                        {% elif column=='R0' %}
+                            <td class="less-padding"></td>
+                        {% else %}
+                            <td class="{{"less-padding" if not loop.index0 else "less-padding align-right"}}">{{ column }}</td>
+                        {% endif %}
+                    {% endfor %}
             </tr> 
             {% endfor %}
         </tbody>
+
+        <tfoot>
+            <tr>
+                <td>
+                <!--place holder for the fixed-position footer-->
+                <div class="page-footer-space"></div>
+                </td>
+            </tr>
+        </tfoot>
+
     </table>
+    </div>
 </div>

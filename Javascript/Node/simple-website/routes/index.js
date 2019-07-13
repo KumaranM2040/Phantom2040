@@ -27,13 +27,19 @@ function getTransactionalColumnHeaders(variFix)
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  let chosenAccountIndex = 1226;
+  let chosenAccountIndex = 192;//1226;
   let account = extractparser.statementObject.accounts[chosenAccountIndex].details;
   let tableRowdata = extractparser.statementObject.accounts[chosenAccountIndex].tableRowdata;
   account["combinedAddress"] = [account.AddressLine1, account.AddressLine2, account.AddressLine3, account.AddressLine4, account.AddressLine5, account.AddressLine6, account.AddressLine7, account.AddressLine8];
   account["transactionColumns"] = getTransactionalColumnHeaders(account.VariFix);
   let transactionData = [];
-
+  extractparser.statementObject.accounts.forEach((element,index) => {
+     if(element.tableRowdata.length > 20)
+     {
+       //console.log('asdasda', index);
+     }
+  });
+  
   tableRowdata.forEach(element => {
     let columns=[element.columns[0], element.columns[1], 'R'+element.columns[3], 'R'+numberWithSpaces(element.columns[5])] ;
     transactionData.push({columns});
