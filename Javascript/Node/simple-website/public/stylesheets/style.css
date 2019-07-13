@@ -48,6 +48,15 @@ p.footer-tiny{
   margin: 0px 0px;
 }
 
+.page-footer {
+  position: fixed;
+  bottom: 0;
+  color:black;
+  background: transparent;
+}
+@page {
+  margin: 2mm
+}
 br.tiny{
   font-size:9px;
 }
