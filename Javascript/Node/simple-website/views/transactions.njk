@@ -1,111 +1,31 @@
 <div class="row" style="border:2px solid #000;">
     <table>
-    <thead>
-        <tr>
-        <th class="less-padding inverted-colour">Transaction</th>
-        <th class="less-padding inverted-colour align-right">Effective <br>Date</th>
-        <th class="less-padding inverted-colour align-right">Variable <br>Transaction</th>
-        <th class="less-padding inverted-colour align-right">Outstanding <br>Balance</th>
-        </tr>
-    </thead>
+        <thead>
+            <tr>
+            {% for header in account.transactionColumns %}
+                {% if header=='Transaction' %}
+                    <th class="less-padding inverted-colour">{{header}}</th>
+                {% else %}
+                    <th class="less-padding inverted-colour align-right">{{header}}<br>Date</th>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        </thead>
 
-    <tbody>
-        <tr>
-        <td class="less-padding">Opening Balance</td>
-        <td class="less-padding align-right"></td>
-        <td class="less-padding align-right"></td>
-        <td class="less-padding align-right">R315 216.25</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Instalment Payment - Debit Order - Variable</td>
-        <td class="less-padding align-right">25/02/2019</td>
-        <td class="less-padding align-right">-R6 500.00</td>
-        <td class="less-padding align-right">R308 716.25</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Monthly Interest Debit - Variable</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R2063</td>
-        <td class="less-padding align-right">R310 779.25</td>
-        </tr>
-        <tr>
-        <td class="less-padding">HOC Premium</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R569.91</td>
-        <td class="less-padding align-right">R311 349.22</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Regent Life Assurance Premium</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R194.02</td>
-        <td class="less-padding align-right">R311 543.24</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Monthly Service Fee</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R57.50</td>
-        <td class="less-padding align-right">R311 600.74</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Instalment Payment - Debit Order - Variable</td>
-        <td class="less-padding align-right">25/02/2019</td>
-        <td class="less-padding align-right">-R6 500.00</td>
-        <td class="less-padding align-right">R308 716.25</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Monthly Interest Debit - Variable</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R2063</td>
-        <td class="less-padding align-right">R310 779.25</td>
-        </tr>
-        <tr>
-        <td class="less-padding">HOC Premium</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R569.91</td>
-        <td class="less-padding align-right">R311 349.22</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Regent Life Assurance Premium</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R194.02</td>
-        <td class="less-padding align-right">R311 543.24</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Monthly Service Fee</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R57.50</td>
-        <td class="less-padding align-right">R311 600.74</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Instalment Payment - Debit Order - Variable</td>
-        <td class="less-padding align-right">25/02/2019</td>
-        <td class="less-padding align-right">-R6 500.00</td>
-        <td class="less-padding align-right">R308 716.25</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Monthly Interest Debit - Variable</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R2063</td>
-        <td class="less-padding align-right">R310 779.25</td>
-        </tr>
-        <tr>
-        <td class="less-padding">HOC Premium</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R569.91</td>
-        <td class="less-padding align-right">R311 349.22</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Regent Life Assurance Premium</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R194.02</td>
-        <td class="less-padding align-right">R311 543.24</td>
-        </tr>
-        <tr>
-        <td class="less-padding">Monthly Service Fee</td>
-        <td class="less-padding align-right">01/03/2019</td>
-        <td class="less-padding align-right">R57.50</td>
-        <td class="less-padding align-right">R311 600.74</td>
-        </tr>
-    </tbody>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                {% for column in transaction.columns %}
+                    {% if column=='undefined' %}
+                        <td class="{{"less-padding" if loop.index0 else "less-padding align-right"}}"></td>
+                    {% elif column=='R0' %}
+                        <td class="less-padding"></td>
+                    {% else %}
+                        <td class="{{"less-padding" if not loop.index0 else "less-padding align-right"}}">{{ column }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr> 
+            {% endfor %}
+        </tbody>
     </table>
 </div>

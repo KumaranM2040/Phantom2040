@@ -83,10 +83,16 @@ function ParseAccountsByLine(line, statementObject, account) {
     if (account) {
         let tokens = TokeniseString(line);
         let count=0;
+        let i = -1;
         let row = {
             columns: []
         };
         tokens.forEach(token => {
+            i++;
+            if (i < 3 || i > 8)
+            {
+                return;
+            }
             if (token === "")
             {
                 count++;
