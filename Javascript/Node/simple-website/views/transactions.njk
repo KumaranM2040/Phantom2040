@@ -1,44 +1,37 @@
-<div class="row" style="border:2px solid #000;">
-    <div class="page">
-    <table>
-        <thead>
+<div class="row">
+
+    <table class="table">
+        <thead class="thead-dark">
             <tr>
-            {% for header in account.transactionColumns %}
+                {% for header in account.transactionColumns %}
                 {% if header=='Transaction' %}
-                    <th class="less-padding inverted-colour">{{header}}</th>
+                <th scope="col" class="align-left align-middle">{{header}}</th>
                 {% else %}
-                    <th class="less-padding inverted-colour align-right">{{header}}<br>Date</th>
+                <th scope="col" class="align-right">{{header}}<br>Date</th>
                 {% endif %}
-            {% endfor %}
+                {% endfor %}
             </tr>
         </thead>
 
         <tbody>
             {% for transaction in transactions %}
-            <tr>
+            <tr style="{{"page-break-after: always" if loop.index==20 else ""}}">
 
-                    {% for column in transaction.columns %}
-                        {% if column=='undefined' %}
-                            <td class="{{"less-padding" if loop.index0 else "less-padding align-right"}}"></td>
-                        {% elif column=='R0' %}
-                            <td class="less-padding"></td>
-                        {% else %}
-                            <td class="{{"less-padding" if not loop.index0 else "less-padding align-right"}}">{{ column }}</td>
-                        {% endif %}
-                    {% endfor %}
-            </tr> 
+                {% for column in transaction.columns %}
+                {% if column=='undefined' %}
+                <td class="{{"less-padding" if loop.index0 else "less-padding align-right"}}"></td>
+                {% elif column=='R0' %}
+                <td class="less-padding"></td>
+                {% else %}
+                <td class="{{"less-padding" if not loop.index0 else "less-padding align-right"}}">{{ column }}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
             {% endfor %}
         </tbody>
 
-        <tfoot>
-            <tr>
-                <td>
-                <!--place holder for the fixed-position footer-->
-                <div class="page-footer-space"></div>
-                </td>
-            </tr>
-        </tfoot>
+
 
     </table>
-    </div>
+
 </div>

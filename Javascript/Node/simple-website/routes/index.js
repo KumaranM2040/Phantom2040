@@ -26,17 +26,21 @@ function getTransactionalColumnHeaders(variFix)
 }
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  let chosenAccountIndex = 192;//1226;
+router.get('/:accountNumber', function(req, res, next) {
+  let chosenAccountIndex = req.params.accountNumber;//12257;//947;//1226;
+  if (!chosenAccountIndex){
+    chosenAccountIndex = 12257;
+    console.log('Using a default account:', chosenAccountIndex);
+  }
   let account = extractparser.statementObject.accounts[chosenAccountIndex].details;
   let tableRowdata = extractparser.statementObject.accounts[chosenAccountIndex].tableRowdata;
   account["combinedAddress"] = [account.AddressLine1, account.AddressLine2, account.AddressLine3, account.AddressLine4, account.AddressLine5, account.AddressLine6, account.AddressLine7, account.AddressLine8];
   account["transactionColumns"] = getTransactionalColumnHeaders(account.VariFix);
   let transactionData = [];
   extractparser.statementObject.accounts.forEach((element,index) => {
-     if(element.tableRowdata.length > 20)
+     if(element.tableRowdata.length > 45)
      {
-       //console.log('asdasda', index);
+       console.log('Big Row Index', index);
      }
   });
   
