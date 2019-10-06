@@ -1,54 +1,99 @@
 {% block body %}
 
 <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-3">
-          This content will take up 3/12 (or 1/4) of the container 
-        </div>
-        <div class="col-3">
-          This content will take up 3/12 (or 1/4) of the container
-        </div>
-        <div class="col-6">
-          This content will take up 6/12 (or 1/2) of the container
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-3">
+        This content will take up 3/12 (or 1/4) of the container
+      </div>
+      <div class="col-3">
+        This content will take up 3/12 (or 1/4) of the container
+      </div>
+      <div class="col-6">
+        This content will take up 6/12 (or 1/2) of the container
       </div>
     </div>
-    
-    <div class="container">
-        <div class="row">
-          <div class="col-4">
-            <div class="card darken-1">
-              <div class="card-content black-text">
-                <p>{{account.NameLine1}} <br>
-                  {% include "addressName.njk" %}
-                  <br>
-                  <br>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-6">
-            <div>
-              {% include "sahl_details.njk" %}
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="item" style="background: yellow;">
-              <img src="images/smallest.png" alt="SA Homeloans Logo">            
-            </div>
-          </div>
-        </div>
-        {% include "loan_details.njk" %}
-        {% include "transactions.njk" %}
-      </div>
+  </div>
+
+  <div class="container">
+ 
+ <div class="col-10 page-footer">
       <br>
       {% include "footer.njk" %}
 
-  <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="javascripts/materialize.js"></script>
-  <script src="javascripts/init.js"></script>
+  </div>
+ 
+ 
+ 
+    <table>
+      <thead>
+        <tr>
+          <td>
+            <!--place holder for the fixed-position header-->
+            <div class="page-header-space"></div>
+            <div class="row">
+              <div class="col-4">
+                <div class="card darken-1">
+                  <div class="card-content black-text">
+                    <p>{{account.NameLine1}} <br>
+                      {% include "addressName.njk" %}
+                      <br>
+                      <br>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div>
+                  {% include "sahl_details.njk" %}
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="item" style="background: yellow;">
+                  <img src="images/smallest.png" alt="SA Homeloans Logo">
+                </div>
+              </div>
+            </div>
+
+
+          </td>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            <!--*** CONTENT GOES HERE ***-->
+            <div class="page">
+              {% include "loan_details.njk" %}
+              {% include "transactions.njk" %}
+            </div>
+
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td>
+            <!--place holder for the fixed-position footer-->
+            <div class="page-footer-space">
+            tet
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+
+    </table>
+
+
+
+
+
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="javascripts/materialize.js"></script>
+    <script src="javascripts/init.js"></script>
 
 </body>
 

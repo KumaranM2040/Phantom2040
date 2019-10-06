@@ -26,6 +26,11 @@ td.align-right, th.align-right {
   text-align: right;
 }
 
+th.force-black-on-white {
+  background-color:#000000;
+  color:#ffffff;
+}
+
 th.inverted-colour{
   font-weight:bold;
   background-color:#000000;
@@ -39,6 +44,7 @@ p.footer-centre{
   font-size:10px;
   font-family: sans-serif;
   margin: 0px 0px;
+  width: 100%
 }
 
 p.footer-tiny{
@@ -69,6 +75,13 @@ p.footer-tiny{
 br.tiny{
   font-size:9px;
 }
+
+@media print { 
+  .table td, .table th { 
+      background-color: #0000 !important; 
+  } 
+}
+
 .container {
   font-size:12px;
 }
