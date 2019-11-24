@@ -12,6 +12,15 @@ const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const uglify = require("gulp-uglify");
+const Gpio = require("onoff").Gpio;
+const led = new Gpio(3,'out');
+const iv = setInterval(_ => led.writeSync(led.readSync()^1),200);
+
+setTimeout(_ => {
+  clearInterval(iv);
+  led.unexport();
+  console.log("Finished with GPIO");
+},30000)
 
 // Load package.json for banner
 const pkg = require('./package.json');
@@ -24,7 +33,14 @@ const banner = ['/*!\n',
   ' */\n',
   '\n'
 ].join('');
- 
+
+//GPIO Initialise
+
+function gpioInitialise(done){
+  //led = new Gpio(2,'out');
+  done();
+}
+
 // BrowserSync
 function browserSync(done) {
   browsersync.init({
