@@ -2,7 +2,7 @@
   "_args": [
     [
       "@fortawesome/fontawesome-free@5.10.2",
-      "G:\\dev\\Phantom2040\\Javascript\\Node\\RasberryPi-IOT\\rpiIOT"
+      "/home/pi/dev/Phantom2040/Javascript/Node/RasberryPi-IOT/rpiIOT"
     ]
   ],
   "_from": "@fortawesome/fontawesome-free@5.10.2",
@@ -27,7 +27,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-5.10.2.tgz",
   "_spec": "5.10.2",
-  "_where": "G:\\dev\\Phantom2040\\Javascript\\Node\\RasberryPi-IOT\\rpiIOT",
+  "_where": "/home/pi/dev/Phantom2040/Javascript/Node/RasberryPi-IOT/rpiIOT",
   "author": {
     "name": "Dave Gandy",
     "email": "dave@fontawesome.com",

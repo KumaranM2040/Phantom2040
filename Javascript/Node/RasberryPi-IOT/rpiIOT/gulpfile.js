@@ -24,14 +24,17 @@ const banner = ['/*!\n',
   ' */\n',
   '\n'
 ].join('');
-
+ 
 // BrowserSync
 function browserSync(done) {
   browsersync.init({
+    ui:false,
     server: {
       baseDir: "./"
     },
-    port: 3000
+    port: 3000,
+    tunnel: true
+
   });
   done();
 }
