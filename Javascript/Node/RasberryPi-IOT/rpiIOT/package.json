@@ -35,9 +35,11 @@
         "bootstrap": "4.3.1",
         "chart.js": "2.8.0",
         "datatables.net-bs4": "1.10.19",
+        "express": "^4.17.1",
         "jquery": "3.4.1",
         "jquery.easing": "^1.4.1",
-        "onoff": "^5.0.0"
+        "onoff": "^5.0.0",
+        "socketio": "^1.0.0"
     },
     "devDependencies": {
         "browser-sync": "2.26.7",

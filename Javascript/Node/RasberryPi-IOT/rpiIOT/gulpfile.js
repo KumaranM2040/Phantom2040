@@ -13,8 +13,15 @@ const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const uglify = require("gulp-uglify");
 const Gpio = require("onoff").Gpio;
-const led = new Gpio(3,'out');
+const led = new Gpio(17,'out');
 const iv = setInterval(_ => led.writeSync(led.readSync()^1),200);
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+io.on('connection',()=>{
+  console.log('Connection enabled.....');
+});
+server.listen(3000);
 
 setTimeout(_ => {
   clearInterval(iv);
@@ -49,7 +56,7 @@ function browserSync(done) {
       baseDir: "./"
     },
     port: 3000,
-    tunnel: true
+    tunnel: false
 
   });
   done();
