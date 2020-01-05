@@ -12,21 +12,65 @@ const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const uglify = require("gulp-uglify");
-const Gpio = require("onoff").Gpio;
-const led = new Gpio(17,'out');
-const iv = setInterval(_ => led.writeSync(led.readSync()^1),200);
+// const Gpio = require("onoff").Gpio;
+// const relayGPIO1 = new Gpio(17,'out');
+
+
+const Gpio = class { writeSync(){ true;} 
+                    readSync(){ true;} 
+                    unexport(){ true;} 
+                  }//require("onoff").Gpio;
+const relayGPIO1 = new Gpio(17,'out');
+const iv = setInterval(_ => relayGPIO1.writeSync(relayGPIO1.readSync()^1),200);
 const app = require('express')();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-io.on('connection',()=>{
-  console.log('Connection enabled.....');
+
+var GPIOControllerSocket = io.of('/gpio-socket');         
+GPIOControllerSocket.on("connection", function(socket) {  
+  console.log('A new gpio-socket WebSocket namespace client connected with ID: ' + socket.client.id);
+  socket.on('GPIO', function(msg, fn){
+        console.log(msg);
+        switch(msg.relay){
+           case 'btnRelay1': 
+            let result = relayGPIO1.readSync();
+            result = true;
+            fn(msg.relay, result ? 'ON': 'OFF');
+            //io.emit('GPIO', result);
+            console.log(result);
+            break;
+         }
+         //io.emit('GPIO', msg);
+         
+         console.log(msg);
+       });
+
 });
-server.listen(3000);
+
+// todoSocket.on('ping', function(msg){
+//   io.emit('ping', msg);
+//   console.log('Kumaran Ping');
+//   console.log(msg);
+// });
+
+GPIOControllerSocket.on('chat message', function(msg){
+  io.emit('chat message', msg);
+  console.log('Kumaran Ping3');
+  console.log(msg);
+});
+
+// io.on('connection',()=>{
+//   socket.on('chat message', function(msg){
+//     io.emit('chat message', msg);
+//     console.log(msg);
+//   });
+// });
+server.listen(5000);
 
 setTimeout(_ => {
-  clearInterval(iv);
-  led.unexport();
-  console.log("Finished with GPIO");
+  // clearInterval(iv);
+  // led.unexport();
+  // console.log("Finished with GPIO");
 },30000)
 
 // Load package.json for banner
@@ -54,6 +98,9 @@ function browserSync(done) {
     ui:false,
     server: {
       baseDir: "./"
+    },
+    socket: {
+      namespace: `http://localhost:3000/bs` // <<<< HERE >>>>
     },
     port: 3000,
     tunnel: false
