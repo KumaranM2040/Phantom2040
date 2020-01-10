@@ -12,16 +12,15 @@ const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const uglify = require("gulp-uglify");
-// const Gpio = require("onoff").Gpio;
-// const relayGPIO1 = new Gpio(17,'out');
+const Gpio = require("onoff").Gpio;
 
+// const Gpio = class { writeSync(){ true;} 
+//                     readSync(){ true;} 
+//                     unexport(){ true;} 
+//                   }//require("onoff").Gpio;
 
-const Gpio = class { writeSync(){ true;} 
-                    readSync(){ true;} 
-                    unexport(){ true;} 
-                  }//require("onoff").Gpio;
 const relayGPIO1 = new Gpio(17,'out');
-const iv = setInterval(_ => relayGPIO1.writeSync(relayGPIO1.readSync()^1),200);
+//const iv = setInterval(_ => relayGPIO1.writeSync(relayGPIO1.readSync()^1),200);
 const app = require('express')();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
@@ -33,9 +32,10 @@ GPIOControllerSocket.on("connection", function(socket) {
         console.log(msg);
         switch(msg.relay){
            case 'btnRelay1': 
+            relayGPIO1.writeSync(relayGPIO1.readSync()^1); 
             let result = relayGPIO1.readSync();
-            result = true;
-            fn(msg.relay, result ? 'ON': 'OFF');
+            //result = true;
+            fn(msg.relay, result === 1 ? 'ON': 'OFF');
             //io.emit('GPIO', result);
             console.log(result);
             break;
