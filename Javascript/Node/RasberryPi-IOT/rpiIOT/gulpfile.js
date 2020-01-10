@@ -20,6 +20,9 @@ const Gpio = require("onoff").Gpio;
 //                   }//require("onoff").Gpio;
 
 const relayGPIO1 = new Gpio(17,'out');
+const relayGPIO2 = new Gpio(27,'out');
+const relayGPIO3 = new Gpio(10,'out');
+const relayGPIO4 = new Gpio(11,'out');
 //const iv = setInterval(_ => relayGPIO1.writeSync(relayGPIO1.readSync()^1),200);
 const app = require('express')();
 const server = require('http').createServer(app);
@@ -30,48 +33,44 @@ GPIOControllerSocket.on("connection", function(socket) {
   console.log('A new gpio-socket WebSocket namespace client connected with ID: ' + socket.client.id);
   socket.on('GPIO', function(msg, fn){
         console.log(msg);
-        switch(msg.relay){
-           case 'btnRelay1': 
-            relayGPIO1.writeSync(relayGPIO1.readSync()^1); 
-            let result = relayGPIO1.readSync();
-            //result = true;
-            fn(msg.relay, result === 1 ? 'ON': 'OFF');
-            //io.emit('GPIO', result);
-            console.log(result);
-            break;
-         }
-         //io.emit('GPIO', msg);
-         
-         console.log(msg);
+        if (msg.toggle === true)
+        {
+          switch(msg.relay){
+            case 'btnRelay1': 
+             relayGPIO1.writeSync(relayGPIO1.readSync()^1); 
+             let result = relayGPIO1.readSync();
+             fn(msg.relay, result === 1 ? 'ON': 'OFF');
+             console.log(result);
+             break;
+          }
+        }
+        else 
+        {
+          let result = 0;
+          switch(msg.relay)
+          {
+            case 'btnRelay1':
+              result = relayGPIO1.readSync();
+              break;
+            case 'btnRelay2':
+              result = relayGPIO2.readSync();
+              break;
+            case 'btnRelay3':
+              result = relayGPIO3.readSync();
+              break;
+            case 'btnRelay4':
+              result = relayGPIO4.readSync();
+              break;
+          }
+          fn(msg.relay, result === 1 ? 'ON': 'OFF');
+        }
+        
+        console.log(msg);
        });
 
 });
 
-// todoSocket.on('ping', function(msg){
-//   io.emit('ping', msg);
-//   console.log('Kumaran Ping');
-//   console.log(msg);
-// });
-
-GPIOControllerSocket.on('chat message', function(msg){
-  io.emit('chat message', msg);
-  console.log('Kumaran Ping3');
-  console.log(msg);
-});
-
-// io.on('connection',()=>{
-//   socket.on('chat message', function(msg){
-//     io.emit('chat message', msg);
-//     console.log(msg);
-//   });
-// });
 server.listen(5000);
-
-setTimeout(_ => {
-  // clearInterval(iv);
-  // led.unexport();
-  // console.log("Finished with GPIO");
-},30000)
 
 // Load package.json for banner
 const pkg = require('./package.json');

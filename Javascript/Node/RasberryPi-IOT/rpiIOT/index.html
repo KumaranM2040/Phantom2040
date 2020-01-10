@@ -790,45 +790,35 @@
           case 'btnRelay1':
             $('#Relay1State').text(status);
             break;
+          case 'btnRelay2':
+            $('#Relay2State').text(status);
+            break;
+          case 'btnRelay3':
+            $('#Relay3State').text(status);
+            break;
+          case 'btnRelay4':
+            $('#Relay4State').text(status);
+            break;
         }
-
       }
       
       function onClickHandler(obj) {
-        console.log('Hit On Click' + obj);
-        //console.log(obj.target)
-        switch(obj.target.id){
-          case 'btnRelay1':
-            console.log(obj.target.id + ' has been hit');
-            let result = socket.emit('GPIO', { relay: obj.target.id, toggle: true}, updateRelayStatus);
-            //$('#Relay1State').text('ON');
-            console.log(result);
-          break;
-          case 'btnRelay2':
-            console.log(obj.target.id + ' has been hit');  
-          break;
-          case 'btnRelay3':
-            console.log(obj.target.id + ' has been hit');  
-          break;
-          case 'btnRelay4':
-            console.log(obj.target.id + ' has been hit');  
-          break;
-
-        }
+        console.log(obj.target.id + ' has been hit');
+        let result = socket.emit('GPIO', { relay: obj.target.id, toggle: true}, updateRelayStatus);
+        console.log(result);
       }
 
+      function readAllRelays(){
+        let result = socket.emit('GPIO', { relay: 'btnRelay1', toggle: false}, updateRelayStatus);
+        result |= socket.emit('GPIO', { relay: 'btnRelay2', toggle: false}, updateRelayStatus);
+        result |= socket.emit('GPIO', { relay: 'btnRelay3', toggle: false}, updateRelayStatus);
+        result |= socket.emit('GPIO', { relay: 'btnRelay4', toggle: false}, updateRelayStatus);
+        console.log(result);
+      }
 
       $("button").click(onClickHandler);
 
-      // $('form').submit(function (e) {
-      //   e.preventDefault(); // prevents page reloading
-      //   console.log($('#Light1').val());
-      //   socket.emit('GPIO', $('#Light1').val());
-      //   //socket.emit('ping', $('#Light1').val());
-      //   //$("#btnProfile").prop('value', $('#Light1').val());
-      //   //$('#Light1').val('');
-      //   return false;
-      // });
+      readAllRelays();
     });
   </script>
 
