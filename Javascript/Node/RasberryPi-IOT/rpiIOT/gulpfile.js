@@ -29,20 +29,34 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
 var GPIOControllerSocket = io.of('/gpio-socket');         
+function toggleRelay(relay){
+  relay.writeSync(relay.readSync()^1);
+  return relay.readSync(); 
+}
 GPIOControllerSocket.on("connection", function(socket) {  
   console.log('A new gpio-socket WebSocket namespace client connected with ID: ' + socket.client.id);
   socket.on('GPIO', function(msg, fn){
         console.log(msg);
         if (msg.toggle === true)
         {
+          let result = 0;
           switch(msg.relay){
             case 'btnRelay1': 
-             relayGPIO1.writeSync(relayGPIO1.readSync()^1); 
-             let result = relayGPIO1.readSync();
-             fn(msg.relay, result === 1 ? 'ON': 'OFF');
-             console.log(result);
+             result = toggleRelay(relayGPIO1); 
              break;
+            case 'btnRelay2': 
+              result = toggleRelay(relayGPIO2); 
+            break;
+            case 'btnRelay3': 
+              result = toggleRelay(relayGPIO3); 
+            break;
+            case 'btnRelay4': 
+              result = toggleRelay(relayGPIO4); 
+            break;
           }
+
+          fn(msg.relay, result === 1 ? 'ON': 'OFF');
+          console.log(result);
         }
         else 
         {
