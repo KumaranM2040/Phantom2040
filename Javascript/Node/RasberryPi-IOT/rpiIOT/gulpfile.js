@@ -19,7 +19,9 @@ const Gpio = require("onoff").Gpio;
 //                     unexport(){ true;} 
 //                   }//require("onoff").Gpio;
 
-const relayGPIO1 = new Gpio(17,'out');
+if (Gpio.accessible){
+
+  const relayGPIO1 = new Gpio(17,'out');
 const relayGPIO2 = new Gpio(27,'out');
 const relayGPIO3 = new Gpio(10,'out');
 const relayGPIO4 = new Gpio(11,'out');
@@ -85,6 +87,8 @@ GPIOControllerSocket.on("connection", function(socket) {
 });
 
 server.listen(5000);
+
+}
 
 // Load package.json for banner
 const pkg = require('./package.json');
