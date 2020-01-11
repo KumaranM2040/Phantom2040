@@ -816,6 +816,11 @@
         console.log(result);
       }
 
+      socket.on('relayState', function (data) {
+        console.log('relayState ' + data);
+        updateRelayStatus(data.relay, data.state);
+      });
+
       $("button").click(onClickHandler);
 
       readAllRelays();

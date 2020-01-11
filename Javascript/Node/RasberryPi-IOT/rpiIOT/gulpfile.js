@@ -58,6 +58,7 @@ GPIOControllerSocket.on("connection", function(socket) {
           }
 
           fn(msg.relay, result === 1 ? 'ON': 'OFF');
+          socket.emit('relayState', { relay: msg.relay, state: result === 1 ? 'ON': 'OFF' });
           console.log(result);
         }
         else 
