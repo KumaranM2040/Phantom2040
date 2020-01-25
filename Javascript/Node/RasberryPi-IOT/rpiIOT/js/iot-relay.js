@@ -1,6 +1,6 @@
 (function($){
     "use strict"; // Start of use strict
-    var socket = io('http://'+location.hostname+':5000/gpio-socket');
+    var socket = io('/gpio-socket');
 
     function updateRelayStatus(relay, status){
       console.log('updateRelayStatus');
