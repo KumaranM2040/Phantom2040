@@ -33,6 +33,19 @@
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
+        },
+        {
+            "name": "GulpTester",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/Javascript/Node/RasberryPi-IOT/rpiIOT/gulpfile.js",
+            "stopOnEntry": false,
+            "args": [],
+            "cwd": "${workspaceRoot}/Javascript/Node/RasberryPi-IOT/rpiIOT/",
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "console": "internalConsole",
         }
     ]
 }

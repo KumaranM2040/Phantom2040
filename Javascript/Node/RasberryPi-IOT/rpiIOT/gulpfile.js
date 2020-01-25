@@ -18,6 +18,12 @@ const Gpio = require("onoff").Gpio;
 //                     readSync(){ true;} 
 //                     unexport(){ true;} 
 //                   }//require("onoff").Gpio;
+const express = require('express');
+const app = express();
+const server = require('http').createServer(app);
+
+app.use(express.static('./'));
+
 
 if (Gpio.accessible){
 
@@ -26,8 +32,8 @@ const relayGPIO2 = new Gpio(27,'out');
 const relayGPIO3 = new Gpio(10,'out');
 const relayGPIO4 = new Gpio(11,'out');
 //const iv = setInterval(_ => relayGPIO1.writeSync(relayGPIO1.readSync()^1),200);
-const app = require('express')();
-const server = require('http').createServer(app);
+
+
 const io = require('socket.io')(server);
 
 var GPIOControllerSocket = io.of('/gpio-socket');         
@@ -36,7 +42,7 @@ function toggleRelay(relay){
   return relay.readSync(); 
 }
 GPIOControllerSocket.on("connection", function(socket) {  
-  console.log('A new gpio-socket WebSocket namespace client connected with ID: ' + socket.client.id);
+  console.log('A new gpio-socket WebSocket namespace client connected with ID: ' + socket.client.id, socket.client);
   socket.on('GPIO', function(msg, fn){
         console.log(msg);
         if (msg.toggle === true)
@@ -86,10 +92,9 @@ GPIOControllerSocket.on("connection", function(socket) {
        });
 
 });
-
-server.listen(5000);
-
 }
+server.listen(3000);
+
 
 // Load package.json for banner
 const pkg = require('./package.json');
@@ -224,7 +229,7 @@ function watchFiles() {
 // Define complex tasks
 const vendor = gulp.series(clean, modules);
 const build = gulp.series(vendor, gulp.parallel(css, js));
-const watch = gulp.series(build, gulp.parallel(watchFiles, browserSync));
+const watch = gulp.series(build, gulp.parallel(watchFiles));
 
 // Export tasks
 exports.css = css;
