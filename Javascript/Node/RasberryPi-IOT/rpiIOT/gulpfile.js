@@ -19,6 +19,7 @@ const http = require("http");
 const https = require("https");
 const express = require("express");
 const app = express();
+var nodeServer;
 
 const request = require("request-promise-native");
 
@@ -100,10 +101,11 @@ function updateCloudFlareDNSARecordIfRequired() {
 
 updateCloudFlareDNSARecordIfRequired();
 
-if (app.get("env") === "development") {
+if (app.get("env") === "developmen") {
   const server = http.createServer(app);
-
+  nodeServer = server;
   app.use(express.static("./"));
+  
   server.listen(3000, () => {
     console.log("HTTP Server running on port 3000");
   });
@@ -123,7 +125,8 @@ if (app.get("env") === "development") {
     cert: certificate
   };
   const server = https.createServer(credentials, app);
-
+  nodeServer = server;
+ 
   app.use(express.static("./"));
   server.listen(443, () => {
     console.log("HTTPS Server running on port 443");
@@ -138,7 +141,7 @@ function gpioInitialise(done) {
     const relayGPIO4 = new Gpio(11, "out");
     //const iv = setInterval(_ => relayGPIO1.writeSync(relayGPIO1.readSync()^1),200);
 
-    const io = require("socket.io")(server);
+    const io = require("socket.io")(nodeServer);
 
     var GPIOControllerSocket = io.of("/gpio-socket");
 
