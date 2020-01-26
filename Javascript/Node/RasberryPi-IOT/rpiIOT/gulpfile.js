@@ -13,124 +13,137 @@ const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const uglify = require("gulp-uglify");
 const Gpio = require("onoff").Gpio;
-
 const fs = require("fs");
 const http = require("http");
 const https = require("https");
 const express = require("express");
 const app = express();
+const request = require("request-promise-native");
 var nodeServer;
 
-const request = require("request-promise-native");
-
 function updateCloudFlareDNSARecordIfRequired() {
-  function callback(error, response, body) {
-    if (!error && response.statusCode == 200) {
-      const content = body.result[0].content;
-      console.log(content);
+  var prom = new Promise(function(resolve, reject) {
+    function callback(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        const content = body.result[0].content;
+        console.log(content);
+      }
     }
-  }
 
-  function onError(error) {
-    console.log("failed due to error" + error);
-  }
+    function onError(error) {
+      console.log("failed due to error" + error);
+      reject();
+    }
 
-  function onSuccess(currentPublicIP) {
-    console.log("Our current Public IP is " + currentPublicIP);
-    const options = {
-      url:
-        "https://api.cloudflare.com/client/v4/zones/9ec329dd044850e58adaf4b438a55530/dns_records?type=A&name=silverlanternslight.com&status=active&account.id=77a3d8b49911c385263fb6627104a40b&page=1&per_page=20&order=status&direction=desc&match=all",
-      json: "true",
-      headers: {
-        "X-Auth-Email": "kumaranm2040@gmail.com",
-        "X-Auth-Key": "e6a6ea969e14bcf8832ea36fd2d74730bf267"
-      }
-    };
-    request(options).then(
-      result => {
-        let dnsARecord = result.result[0].content;
-        const dnsId = result.result[0].id;
-        console.log(dnsARecord);
-        if (dnsARecord !== currentPublicIP && currentPublicIP.length > 0) {
-          console.log(
-            "Change in Public IP address detected: Current Public IP is " +
-              currentPublicIP +
-              " dnsARecord is " +
-              dnsARecord
-          );
-          request
-            .patch({
-              url:
-                "https://api.cloudflare.com/client/v4/zones/9ec329dd044850e58adaf4b438a55530/dns_records/" +
-                dnsId,
-              headers: {
-                "X-Auth-Email": "kumaranm2040@gmail.com",
-                "X-Auth-Key": "e6a6ea969e14bcf8832ea36fd2d74730bf267",
-                "content-type": "application/json"
-              },
-              body: JSON.stringify({
-                type: "A",
-                name: "silverlanternslight.com",
-                content: currentPublicIP,
-                ttl: 1,
-                proxied: false
-              })
-            })
-            .then(
-              response => {
-                console.log(
-                  "Successfully update Cloudflare DNS A record for Domain silverlanternslight" +
-                    response
-                );
-              },
-              error => {
-                console.log("Patch to Cloudflare failed due to error" + error);
-              }
-            );
-        } else if (currentPublicIP.length > 0) {
-          console.log("No change in Public IP address " + currentPublicIP);
+    function onSuccess(currentPublicIP) {
+      console.log("Our current Public IP is " + currentPublicIP);
+      const options = {
+        url:
+          "https://api.cloudflare.com/client/v4/zones/9ec329dd044850e58adaf4b438a55530/dns_records?type=A&name=silverlanternslight.com&status=active&account.id=77a3d8b49911c385263fb6627104a40b&page=1&per_page=20&order=status&direction=desc&match=all",
+        json: "true",
+        headers: {
+          "X-Auth-Email": "kumaranm2040@gmail.com",
+          "X-Auth-Key": "e6a6ea969e14bcf8832ea36fd2d74730bf267"
         }
-      },
-      error => {
-        console.log("DNS check on CloudFlare failed with error" + error);
-      }
-    );
-  }
-  request("https://api.ipify.org").then(onSuccess, onError);
+      };
+      request(options).then(
+        result => {
+          let dnsARecord = result.result[0].content;
+          const dnsId = result.result[0].id;
+          console.log(dnsARecord);
+          if (dnsARecord !== currentPublicIP && currentPublicIP.length > 0) {
+            console.log(
+              "Change in Public IP address detected: Current Public IP is " +
+                currentPublicIP +
+                " dnsARecord is " +
+                dnsARecord
+            );
+            request
+              .patch({
+                url:
+                  "https://api.cloudflare.com/client/v4/zones/9ec329dd044850e58adaf4b438a55530/dns_records/" +
+                  dnsId,
+                headers: {
+                  "X-Auth-Email": "kumaranm2040@gmail.com",
+                  "X-Auth-Key": "e6a6ea969e14bcf8832ea36fd2d74730bf267",
+                  "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                  type: "A",
+                  name: "silverlanternslight.com",
+                  content: currentPublicIP,
+                  ttl: 1,
+                  proxied: false
+                })
+              })
+              .then(
+                response => {
+                  console.log(
+                    "Successfully update Cloudflare DNS A record for Domain silverlanternslight" +
+                      response
+                  );
+                  resolve();
+                },
+                error => {
+                  console.log(
+                    "Patch to Cloudflare failed due to error" + error
+                  );
+                  reject();
+                }
+              );
+          } else if (currentPublicIP.length > 0) {
+            console.log("No change in Public IP address " + currentPublicIP);
+            resolve();
+          }
+        },
+        error => {
+          console.log("DNS check on CloudFlare failed with error" + error);
+          reject();
+        }
+      );
+    }
+    request("https://api.ipify.org").then(onSuccess, onError);
+  });
+  return prom;
 }
 
-updateCloudFlareDNSARecordIfRequired();
+function startWebServer() {
+  var prom = new Promise(function(resolve, reject) {
+    if (app.get("env") === "development") {
+      const server = http.createServer(app);
+      nodeServer = server;
+      app.use(express.static("./"));
 
-if (app.get("env") === "development") {
-  const server = http.createServer(app);
-  nodeServer = server;
-  app.use(express.static("./"));
-  
-  server.listen(3000, () => {
-    console.log("HTTP Server running on port 3000");
-  });
-} else {
-  // Certificate
-  const privateKey = fs.readFileSync(
-    "/etc/letsencrypt/live/silverlanternslight.com/privkey.pem",
-    "utf8"
-  );
-  const certificate = fs.readFileSync(
-    "/etc/letsencrypt/live/silverlanternslight.com/fullchain.pem",
-    "utf8"
-  );
+      server.listen(3000, () => {
+        console.log("HTTP Server running on port 3000");
+        resolve();
+      });
+    } else {
+      // Certificate
+      const privateKey = fs.readFileSync(
+        "/etc/letsencrypt/live/silverlanternslight.com/privkey.pem",
+        "utf8"
+      );
+      const certificate = fs.readFileSync(
+        "/etc/letsencrypt/live/silverlanternslight.com/fullchain.pem",
+        "utf8"
+      );
 
-  const credentials = {
-    key: privateKey,
-    cert: certificate
-  };
-  const server = https.createServer(credentials, app);
-  nodeServer = server;
- 
-  app.use(express.static("./"));
-  server.listen(443, () => {
-    console.log("HTTPS Server running on port 443");
+      const credentials = {
+        key: privateKey,
+        cert: certificate
+      };
+      const server = https.createServer(credentials, app);
+      nodeServer = server;
+
+      app.use(express.static("./"));
+      server.listen(443, () => {
+        console.log("HTTPS Server running on port 443");
+        resolve();
+      });
+    }
   });
+  return prom;
 }
 
 function gpioInitialise(done) {
@@ -228,7 +241,7 @@ function browserSync(done) {
       baseDir: "./"
     },
     socket: {
-      namespace: `http://localhost:3000/bs` // <<<< HERE >>>>
+      namespace: `http://localhost:3000/bs`
     },
     port: 3000,
     tunnel: false
@@ -357,7 +370,13 @@ function watchFiles() {
 // Define complex tasks
 const vendor = gulp.series(clean, modules);
 const build = gulp.series(vendor, gulp.parallel(css, js));
-const watch = gulp.series(build, gulp.parallel(watchFiles, gpioInitialise));
+const iotapprun = gulp.series(
+  updateCloudFlareDNSARecordIfRequired,
+  startWebServer,
+  gpioInitialise
+);
+const watch = gulp.series(build, gulp.parallel(watchFiles, iotapprun));
+setInterval(updateCloudFlareDNSARecordIfRequired, 1800000); // check every 30min for change in ipaddress and update CloudFlare if required
 
 // Export tasks
 exports.css = css;
@@ -367,3 +386,4 @@ exports.vendor = vendor;
 exports.build = build;
 exports.watch = watch;
 exports.default = build;
+exports.iotapprun = iotapprun;
