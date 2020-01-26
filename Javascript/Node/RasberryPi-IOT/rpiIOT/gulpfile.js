@@ -88,7 +88,7 @@ function updateCloudFlareDNSARecordIfRequired() {
               }
             );
         } else if (currentPublicIP.length > 0) {
-          console.log("No change in Public IP address" + currentPublicIP);
+          console.log("No change in Public IP address " + currentPublicIP);
         }
       },
       error => {
@@ -101,7 +101,7 @@ function updateCloudFlareDNSARecordIfRequired() {
 
 updateCloudFlareDNSARecordIfRequired();
 
-if (app.get("env") === "developmen") {
+if (app.get("env") === "development") {
   const server = http.createServer(app);
   nodeServer = server;
   app.use(express.static("./"));
