@@ -14,141 +14,213 @@ const sass = require("gulp-sass");
 const uglify = require("gulp-uglify");
 const Gpio = require("onoff").Gpio;
 
-const fs = require('fs');
-const http = require('http');
-const https = require('https');
-
-// Certificate
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/silverlanternslight.com/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/silverlanternslight.com/fullchain.pem', 'utf8');
-//const ca = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/chain.pem', 'utf8');
-
-const credentials = {
-	key: privateKey,
-	cert: certificate,
-};
-
-
-// Starting both http & https servers
-//const httpServer = http.createServer(app);
-//const httpsServer = https.createServer(credentials, app);
-
-// httpServer.listen(80, () => {
-// 	console.log('HTTP Server running on port 80');
-// });
-
-// httpsServer.listen(443, () => {
-// 	console.log('HTTPS Server running on port 443');
-// });
-
-
-
-
-// const Gpio = class { writeSync(){ true;} 
-//                     readSync(){ true;} 
-//                     unexport(){ true;} 
-//                   }//require("onoff").Gpio;
-const express = require('express');
+const fs = require("fs");
+const http = require("http");
+const https = require("https");
+const express = require("express");
 const app = express();
-const server = https.createServer(credentials, app);
 
-app.use(express.static('./'));
+const request = require("request-promise-native");
 
+function updateCloudFlareDNSARecordIfRequired() {
+  function callback(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      const content = body.result[0].content;
+      console.log(content);
+    }
+  }
 
-if (Gpio.accessible){
+  function onError(error) {
+    console.log("failed due to error" + error);
+  }
 
-  const relayGPIO1 = new Gpio(17,'out');
-const relayGPIO2 = new Gpio(27,'out');
-const relayGPIO3 = new Gpio(10,'out');
-const relayGPIO4 = new Gpio(11,'out');
-//const iv = setInterval(_ => relayGPIO1.writeSync(relayGPIO1.readSync()^1),200);
-
-
-const io = require('socket.io')(server);
-
-var GPIOControllerSocket = io.of('/gpio-socket');         
-function toggleRelay(relay){
-  relay.writeSync(relay.readSync()^1);
-  return relay.readSync(); 
+  function onSuccess(currentPublicIP) {
+    console.log("Our current Public IP is " + currentPublicIP);
+    const options = {
+      url:
+        "https://api.cloudflare.com/client/v4/zones/9ec329dd044850e58adaf4b438a55530/dns_records?type=A&name=silverlanternslight.com&status=active&account.id=77a3d8b49911c385263fb6627104a40b&page=1&per_page=20&order=status&direction=desc&match=all",
+      json: "true",
+      headers: {
+        "X-Auth-Email": "kumaranm2040@gmail.com",
+        "X-Auth-Key": "e6a6ea969e14bcf8832ea36fd2d74730bf267"
+      }
+    };
+    request(options).then(
+      result => {
+        let dnsARecord = result.result[0].content;
+        const dnsId = result.result[0].id;
+        console.log(dnsARecord);
+        if (dnsARecord !== currentPublicIP && currentPublicIP.length > 0) {
+          console.log(
+            "Change in Public IP address detected: Current Public IP is " +
+              currentPublicIP +
+              " dnsARecord is " +
+              dnsARecord
+          );
+          request
+            .patch({
+              url:
+                "https://api.cloudflare.com/client/v4/zones/9ec329dd044850e58adaf4b438a55530/dns_records/" +
+                dnsId,
+              headers: {
+                "X-Auth-Email": "kumaranm2040@gmail.com",
+                "X-Auth-Key": "e6a6ea969e14bcf8832ea36fd2d74730bf267",
+                "content-type": "application/json"
+              },
+              body: JSON.stringify({
+                type: "A",
+                name: "silverlanternslight.com",
+                content: currentPublicIP,
+                ttl: 1,
+                proxied: false
+              })
+            })
+            .then(
+              response => {
+                console.log(
+                  "Successfully update Cloudflare DNS A record for Domain silverlanternslight" +
+                    response
+                );
+              },
+              error => {
+                console.log("Patch to Cloudflare failed due to error" + error);
+              }
+            );
+        } else if (currentPublicIP.length > 0) {
+          console.log("No change in Public IP address" + currentPublicIP);
+        }
+      },
+      error => {
+        console.log("DNS check on CloudFlare failed with error" + error);
+      }
+    );
+  }
+  request("https://api.ipify.org").then(onSuccess, onError);
 }
-GPIOControllerSocket.on("connection", function(socket) {  
-  console.log('A new gpio-socket WebSocket namespace client connected with ID: ' + socket.client.id, socket.client);
-  socket.on('GPIO', function(msg, fn){
+
+updateCloudFlareDNSARecordIfRequired();
+
+if (app.get("env") === "development") {
+  const server = http.createServer(app);
+
+  app.use(express.static("./"));
+  server.listen(3000, () => {
+    console.log("HTTP Server running on port 3000");
+  });
+} else {
+  // Certificate
+  const privateKey = fs.readFileSync(
+    "/etc/letsencrypt/live/silverlanternslight.com/privkey.pem",
+    "utf8"
+  );
+  const certificate = fs.readFileSync(
+    "/etc/letsencrypt/live/silverlanternslight.com/fullchain.pem",
+    "utf8"
+  );
+
+  const credentials = {
+    key: privateKey,
+    cert: certificate
+  };
+  const server = https.createServer(credentials, app);
+
+  app.use(express.static("./"));
+  server.listen(443, () => {
+    console.log("HTTPS Server running on port 443");
+  });
+}
+
+function gpioInitialise(done) {
+  if (Gpio.accessible) {
+    const relayGPIO1 = new Gpio(17, "out");
+    const relayGPIO2 = new Gpio(27, "out");
+    const relayGPIO3 = new Gpio(10, "out");
+    const relayGPIO4 = new Gpio(11, "out");
+    //const iv = setInterval(_ => relayGPIO1.writeSync(relayGPIO1.readSync()^1),200);
+
+    const io = require("socket.io")(server);
+
+    var GPIOControllerSocket = io.of("/gpio-socket");
+
+    function toggleRelay(relay) {
+      relay.writeSync(relay.readSync() ^ 1);
+      return relay.readSync();
+    }
+    GPIOControllerSocket.on("connection", function(socket) {
+      console.log(
+        "A new gpio-socket WebSocket namespace client connected with ID: " +
+          socket.client.id,
+        socket.client
+      );
+      socket.on("GPIO", function(msg, fn) {
         console.log(msg);
-        if (msg.toggle === true)
-        {
+        if (msg.toggle === true) {
           let result = 0;
-          switch(msg.relay){
-            case 'btnRelay1': 
-             result = toggleRelay(relayGPIO1); 
-             break;
-            case 'btnRelay2': 
-              result = toggleRelay(relayGPIO2); 
-            break;
-            case 'btnRelay3': 
-              result = toggleRelay(relayGPIO3); 
-            break;
-            case 'btnRelay4': 
-              result = toggleRelay(relayGPIO4); 
-            break;
+          switch (msg.relay) {
+            case "btnRelay1":
+              result = toggleRelay(relayGPIO1);
+              break;
+            case "btnRelay2":
+              result = toggleRelay(relayGPIO2);
+              break;
+            case "btnRelay3":
+              result = toggleRelay(relayGPIO3);
+              break;
+            case "btnRelay4":
+              result = toggleRelay(relayGPIO4);
+              break;
           }
 
-          fn(msg.relay, result === 1 ? 'ON': 'OFF');
-          socket.emit('relayState', { relay: msg.relay, state: result === 1 ? 'ON': 'OFF' });
+          fn(msg.relay, result === 1 ? "ON" : "OFF");
+          socket.emit("relayState", {
+            relay: msg.relay,
+            state: result === 1 ? "ON" : "OFF"
+          });
           console.log(result);
-        }
-        else 
-        {
+        } else {
           let result = 0;
-          switch(msg.relay)
-          {
-            case 'btnRelay1':
+          switch (msg.relay) {
+            case "btnRelay1":
               result = relayGPIO1.readSync();
               break;
-            case 'btnRelay2':
+            case "btnRelay2":
               result = relayGPIO2.readSync();
               break;
-            case 'btnRelay3':
+            case "btnRelay3":
               result = relayGPIO3.readSync();
               break;
-            case 'btnRelay4':
+            case "btnRelay4":
               result = relayGPIO4.readSync();
               break;
           }
-          fn(msg.relay, result === 1 ? 'ON': 'OFF');
+          fn(msg.relay, result === 1 ? "ON" : "OFF");
         }
-        
+
         console.log(msg);
-       });
-
-});
-}
-server.listen(443);
-
-
-// Load package.json for banner
-const pkg = require('./package.json');
-
-// Set the banner content
-const banner = ['/*!\n',
-  ' * Start Bootstrap - <%= pkg.title %> v<%= pkg.version %> (<%= pkg.homepage %>)\n',
-  ' * Copyright 2013-' + (new Date()).getFullYear(), ' <%= pkg.author %>\n',
-  ' * Licensed under <%= pkg.license %> (https://github.com/BlackrockDigital/<%= pkg.name %>/blob/master/LICENSE)\n',
-  ' */\n',
-  '\n'
-].join('');
-
-//GPIO Initialise
-
-function gpioInitialise(done){
-  //led = new Gpio(2,'out');
+      });
+    });
+  }
   done();
 }
+
+// Load package.json for banner
+const pkg = require("./package.json");
+
+// Set the banner content
+const banner = [
+  "/*!\n",
+  " * Start Bootstrap - <%= pkg.title %> v<%= pkg.version %> (<%= pkg.homepage %>)\n",
+  " * Copyright 2013-" + new Date().getFullYear(),
+  " <%= pkg.author %>\n",
+  " * Licensed under <%= pkg.license %> (https://github.com/BlackrockDigital/<%= pkg.name %>/blob/master/LICENSE)\n",
+  " */\n",
+  "\n"
+].join("");
 
 // BrowserSync
 function browserSync(done) {
   browsersync.init({
-    ui:false,
+    ui: false,
     server: {
       baseDir: "./"
     },
@@ -157,7 +229,6 @@ function browserSync(done) {
     },
     port: 3000,
     tunnel: false
-
   });
   done();
 }
@@ -176,34 +247,49 @@ function clean() {
 // Bring third party dependencies from node_modules into vendor directory
 function modules() {
   // Bootstrap JS
-  var bootstrapJS = gulp.src('./node_modules/bootstrap/dist/js/*')
-    .pipe(gulp.dest('./vendor/bootstrap/js'));
+  var bootstrapJS = gulp
+    .src("./node_modules/bootstrap/dist/js/*")
+    .pipe(gulp.dest("./vendor/bootstrap/js"));
   // Bootstrap SCSS
-  var bootstrapSCSS = gulp.src('./node_modules/bootstrap/scss/**/*')
-    .pipe(gulp.dest('./vendor/bootstrap/scss'));
+  var bootstrapSCSS = gulp
+    .src("./node_modules/bootstrap/scss/**/*")
+    .pipe(gulp.dest("./vendor/bootstrap/scss"));
   // ChartJS
-  var chartJS = gulp.src('./node_modules/chart.js/dist/*.js')
-    .pipe(gulp.dest('./vendor/chart.js'));
+  var chartJS = gulp
+    .src("./node_modules/chart.js/dist/*.js")
+    .pipe(gulp.dest("./vendor/chart.js"));
   // dataTables
-  var dataTables = gulp.src([
-      './node_modules/datatables.net/js/*.js',
-      './node_modules/datatables.net-bs4/js/*.js',
-      './node_modules/datatables.net-bs4/css/*.css'
+  var dataTables = gulp
+    .src([
+      "./node_modules/datatables.net/js/*.js",
+      "./node_modules/datatables.net-bs4/js/*.js",
+      "./node_modules/datatables.net-bs4/css/*.css"
     ])
-    .pipe(gulp.dest('./vendor/datatables'));
+    .pipe(gulp.dest("./vendor/datatables"));
   // Font Awesome
-  var fontAwesome = gulp.src('./node_modules/@fortawesome/**/*')
-    .pipe(gulp.dest('./vendor'));
+  var fontAwesome = gulp
+    .src("./node_modules/@fortawesome/**/*")
+    .pipe(gulp.dest("./vendor"));
   // jQuery Easing
-  var jqueryEasing = gulp.src('./node_modules/jquery.easing/*.js')
-    .pipe(gulp.dest('./vendor/jquery-easing'));
+  var jqueryEasing = gulp
+    .src("./node_modules/jquery.easing/*.js")
+    .pipe(gulp.dest("./vendor/jquery-easing"));
   // jQuery
-  var jquery = gulp.src([
-      './node_modules/jquery/dist/*',
-      '!./node_modules/jquery/dist/core.js'
+  var jquery = gulp
+    .src([
+      "./node_modules/jquery/dist/*",
+      "!./node_modules/jquery/dist/core.js"
     ])
-    .pipe(gulp.dest('./vendor/jquery'));
-  return merge(bootstrapJS, bootstrapSCSS, chartJS, dataTables, fontAwesome, jquery, jqueryEasing);
+    .pipe(gulp.dest("./vendor/jquery"));
+  return merge(
+    bootstrapJS,
+    bootstrapSCSS,
+    chartJS,
+    dataTables,
+    fontAwesome,
+    jquery,
+    jqueryEasing
+  );
 }
 
 // CSS task
@@ -211,21 +297,29 @@ function css() {
   return gulp
     .src("./scss/**/*.scss")
     .pipe(plumber())
-    .pipe(sass({
-      outputStyle: "expanded",
-      includePaths: "./node_modules",
-    }))
+    .pipe(
+      sass({
+        outputStyle: "expanded",
+        includePaths: "./node_modules"
+      })
+    )
     .on("error", sass.logError)
-    .pipe(autoprefixer({
-      cascade: false
-    }))
-    .pipe(header(banner, {
-      pkg: pkg
-    }))
+    .pipe(
+      autoprefixer({
+        cascade: false
+      })
+    )
+    .pipe(
+      header(banner, {
+        pkg: pkg
+      })
+    )
     .pipe(gulp.dest("./css"))
-    .pipe(rename({
-      suffix: ".min"
-    }))
+    .pipe(
+      rename({
+        suffix: ".min"
+      })
+    )
     .pipe(cleanCSS())
     .pipe(gulp.dest("./css"))
     .pipe(browsersync.stream());
@@ -234,18 +328,19 @@ function css() {
 // JS task
 function js() {
   return gulp
-    .src([
-      './js/*.js',
-      '!./js/*.min.js',
-    ])
+    .src(["./js/*.js", "!./js/*.min.js"])
     .pipe(uglify())
-    .pipe(header(banner, {
-      pkg: pkg
-    }))
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest('./js'))
+    .pipe(
+      header(banner, {
+        pkg: pkg
+      })
+    )
+    .pipe(
+      rename({
+        suffix: ".min"
+      })
+    )
+    .pipe(gulp.dest("./js"))
     .pipe(browsersync.stream());
 }
 
@@ -259,7 +354,7 @@ function watchFiles() {
 // Define complex tasks
 const vendor = gulp.series(clean, modules);
 const build = gulp.series(vendor, gulp.parallel(css, js));
-const watch = gulp.series(build, gulp.parallel(watchFiles));
+const watch = gulp.series(build, gulp.parallel(watchFiles, gpioInitialise));
 
 // Export tasks
 exports.css = css;
