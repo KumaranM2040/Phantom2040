@@ -19,9 +19,11 @@ const https = require("https");
 const express = require("express");
 const app = express();
 const request = require("request-promise-native");
+const path = require("path");
+const loginRoutes = require("./routes/login");
 var nodeServer;
-var lastPublicIpAddress = '';
-var lastDnsARecord = '';
+var lastPublicIpAddress = "";
+var lastDnsARecord = "";
 
 function updateCloudFlareDNSARecordIfRequired() {
   var prom = new Promise(function(resolve, reject) {
@@ -39,12 +41,14 @@ function updateCloudFlareDNSARecordIfRequired() {
 
     function onSuccess(currentPublicIP) {
       console.log("Our current Public IP is " + currentPublicIP);
-      if (currentPublicIP === lastPublicIpAddress){
-        console.log("Our IP has not changed since the last time we checked. No need to query Cloudflare"); 
+      if (currentPublicIP === lastPublicIpAddress) {
+        console.log(
+          "Our IP has not changed since the last time we checked. No need to query Cloudflare"
+        );
         resolve();
-         return;
+        return;
       }
-        
+
       const options = {
         url:
           "https://api.cloudflare.com/client/v4/zones/9ec329dd044850e58adaf4b438a55530/dns_records?type=A&name=silverlanternslight.com&status=active&account.id=77a3d8b49911c385263fb6627104a40b&page=1&per_page=20&order=status&direction=desc&match=all",
@@ -54,13 +58,14 @@ function updateCloudFlareDNSARecordIfRequired() {
           "X-Auth-Key": "e6a6ea969e14bcf8832ea36fd2d74730bf267"
         }
       };
-      if (lastDnsARecord.length > 0 && lastDnsARecord === currentPublicIP)
-      {
-         console.log("Current Ip address has changed but it already match lastDnsARecord so dont query and update Cloudflare"); 
-         resolve();
-         return;
+      if (lastDnsARecord.length > 0 && lastDnsARecord === currentPublicIP) {
+        console.log(
+          "Current Ip address has changed but it already match lastDnsARecord so dont query and update Cloudflare"
+        );
+        resolve();
+        return;
       }
-      
+
       request(options).then(
         result => {
           let dnsARecord = result.result[0].content;
@@ -127,14 +132,22 @@ function updateCloudFlareDNSARecordIfRequired() {
 function startWebServer() {
   var prom = new Promise(function(resolve, reject) {
     if (app.get("env") === "development") {
-      const server = http.createServer(app);
-      nodeServer = server;
-      app.use(express.static("./"));
+      if (app.get("BROWSER_SYNC") === "enable") {
+        browserSync(resolve);
+      } else {
+        const server = http.createServer(app);
 
-      server.listen(3000, () => {
-        console.log("HTTP Server running on port 3000");
-        resolve();
-      });
+        nodeServer = server;
+
+        app.use(loginRoutes);
+
+        app.use(express.static("./"));
+
+        server.listen(3000, () => {
+          console.log("HTTP Server running on port 3000");
+          resolve();
+        });
+      }
     } else {
       // Certificate
       const privateKey = fs.readFileSync(
@@ -169,7 +182,6 @@ function gpioInitialise(done) {
     const relayGPIO2 = new Gpio(27, "out");
     const relayGPIO3 = new Gpio(10, "out");
     const relayGPIO4 = new Gpio(11, "out");
-    //const iv = setInterval(_ => relayGPIO1.writeSync(relayGPIO1.readSync()^1),200);
 
     const io = require("socket.io")(nodeServer);
 
@@ -250,157 +262,15 @@ const banner = [
   "\n"
 ].join("");
 
-// BrowserSync
-function browserSync(done) {
-  browsersync.init({
-    ui: false,
-    server: {
-      baseDir: "./"
-    },
-    socket: {
-      namespace: `http://localhost:3000/bs`
-    },
-    port: 3000,
-    tunnel: false
-  });
-  done();
-}
-
-// BrowserSync reload
-function browserSyncReload(done) {
-  browsersync.reload();
-  done();
-}
-
-// Clean vendor
-function clean() {
-  return del(["./vendor/"]);
-}
-
-// Bring third party dependencies from node_modules into vendor directory
-function modules() {
-  // Bootstrap JS
-  var bootstrapJS = gulp
-    .src("./node_modules/bootstrap/dist/js/*")
-    .pipe(gulp.dest("./vendor/bootstrap/js"));
-  // Bootstrap SCSS
-  var bootstrapSCSS = gulp
-    .src("./node_modules/bootstrap/scss/**/*")
-    .pipe(gulp.dest("./vendor/bootstrap/scss"));
-  // ChartJS
-  var chartJS = gulp
-    .src("./node_modules/chart.js/dist/*.js")
-    .pipe(gulp.dest("./vendor/chart.js"));
-  // dataTables
-  var dataTables = gulp
-    .src([
-      "./node_modules/datatables.net/js/*.js",
-      "./node_modules/datatables.net-bs4/js/*.js",
-      "./node_modules/datatables.net-bs4/css/*.css"
-    ])
-    .pipe(gulp.dest("./vendor/datatables"));
-  // Font Awesome
-  var fontAwesome = gulp
-    .src("./node_modules/@fortawesome/**/*")
-    .pipe(gulp.dest("./vendor"));
-  // jQuery Easing
-  var jqueryEasing = gulp
-    .src("./node_modules/jquery.easing/*.js")
-    .pipe(gulp.dest("./vendor/jquery-easing"));
-  // jQuery
-  var jquery = gulp
-    .src([
-      "./node_modules/jquery/dist/*",
-      "!./node_modules/jquery/dist/core.js"
-    ])
-    .pipe(gulp.dest("./vendor/jquery"));
-  return merge(
-    bootstrapJS,
-    bootstrapSCSS,
-    chartJS,
-    dataTables,
-    fontAwesome,
-    jquery,
-    jqueryEasing
-  );
-}
-
-// CSS task
-function css() {
-  return gulp
-    .src("./scss/**/*.scss")
-    .pipe(plumber())
-    .pipe(
-      sass({
-        outputStyle: "expanded",
-        includePaths: "./node_modules"
-      })
-    )
-    .on("error", sass.logError)
-    .pipe(
-      autoprefixer({
-        cascade: false
-      })
-    )
-    .pipe(
-      header(banner, {
-        pkg: pkg
-      })
-    )
-    .pipe(gulp.dest("./css"))
-    .pipe(
-      rename({
-        suffix: ".min"
-      })
-    )
-    .pipe(cleanCSS())
-    .pipe(gulp.dest("./css"))
-    .pipe(browsersync.stream());
-}
-
-// JS task
-function js() {
-  return gulp
-    .src(["./js/*.js", "!./js/*.min.js"])
-    .pipe(uglify())
-    .pipe(
-      header(banner, {
-        pkg: pkg
-      })
-    )
-    .pipe(
-      rename({
-        suffix: ".min"
-      })
-    )
-    .pipe(gulp.dest("./js"))
-    .pipe(browsersync.stream());
-}
-
-// Watch files
-function watchFiles() {
-  gulp.watch("./scss/**/*", css);
-  gulp.watch(["./js/**/*", "!./js/**/*.min.js"], js);
-  gulp.watch("./**/*.html", browserSyncReload);
-}
 
 // Define complex tasks
-const vendor = gulp.series(clean, modules);
-const build = gulp.series(vendor, gulp.parallel(css, js));
 const iotapprun = gulp.series(
   updateCloudFlareDNSARecordIfRequired,
   startWebServer,
   gpioInitialise
 );
-const watch = gulp.series(build, gulp.parallel(watchFiles, iotapprun));
+
 setInterval(updateCloudFlareDNSARecordIfRequired, 1800000); // check every 30min for change in ipaddress and update CloudFlare if required
 
 // Export tasks
-exports.css = css;
-exports.js = js;
-exports.clean = clean;
-exports.vendor = vendor;
-exports.build = build;
-exports.watch = watch;
-exports.default = build;
 exports.iotapprun = iotapprun;
