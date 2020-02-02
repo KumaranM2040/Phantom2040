@@ -11,7 +11,6 @@ function gpioInitialise() {
       const io = require("socket.io")(global.nodeserver);
 
       var GPIOControllerSocket = io.of("/gpio-socket");
-      resolve();
       function toggleRelay(relay) {
         relay.writeSync(relay.readSync() ^ 1);
         return relay.readSync();
@@ -69,8 +68,9 @@ function gpioInitialise() {
           console.log(msg);
         });
       });
+      resolve();
     } else {
-        resolve();
+      resolve();
     }
   });
 }
