@@ -70,6 +70,18 @@ function gpioInitialise() {
       });
       resolve();
     } else {
+      const io = require("socket.io")(global.nodeserver);
+
+      var GPIOControllerSocket = io.of("/gpio-socket");
+      GPIOControllerSocket.on("connection", function(socket) {
+        socket.on("GPIO", function(msg, fn) {
+          socket.emit("relayState", {
+            relay: msg.relay,
+            state: "OFF"
+          });
+        });
+      });
+
       resolve();
     }
   });

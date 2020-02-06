@@ -16,7 +16,7 @@ function startWebServer(serverobj) {
 
       app.use(loginRoutes);
 
-      app.use(express.static("./"));
+      app.use(express.static("./public"));
 
       server.listen(3000, () => {
         console.log("HTTP Server running on port 3000");
