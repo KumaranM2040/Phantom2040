@@ -6,8 +6,9 @@ const fs = require("fs");
 const http = require("http");
 const https = require("https");
 const bodyParser = require("body-parser");
+const path = require('path');
 
-const loginRoutes = require("../routes/login");
+const loginRoutes = require(path.join(__dirname, '../routes/login'));
 
 function startWebServer(serverobj) {
   var prom = new Promise(function(resolve, reject) {
