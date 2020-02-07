@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require("express");
 const app = express();
 const fs = require("fs");
@@ -9,14 +11,17 @@ const loginRoutes = require("../routes/login");
 
 function startWebServer(serverobj) {
   var prom = new Promise(function(resolve, reject) {
+    function configureRoutes(app) {
+      app.use(loginRoutes);
+
+      app.use(express.static("./public"));
+    }
+    configureRoutes(app);
+
     if (app.get("env") === "development") {
       const server = http.createServer(app);
 
       global.nodeserver = server;
-
-      app.use(loginRoutes);
-
-      app.use(express.static("./public"));
 
       server.listen(3000, () => {
         console.log("HTTP Server running on port 3000");
@@ -40,7 +45,6 @@ function startWebServer(serverobj) {
       const server = https.createServer(credentials, app);
       global.nodeserver = server;
 
-      app.use(express.static("./"));
       server.listen(443, () => {
         console.log("HTTPS Server running on port 443");
         resolve();
