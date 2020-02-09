@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const express = require("express");
 const app = express();
@@ -6,14 +6,18 @@ const fs = require("fs");
 const http = require("http");
 const https = require("https");
 const bodyParser = require("body-parser");
-const path = require('path');
+const path = require("path");
 
-const loginRoutes = require(path.join(__dirname, '../routes/login'));
+app.use(express.urlencoded({ extended: true }));
 
-function startWebServer(serverobj) {
+const loginRoutes = require(path.join(__dirname, "/routes/login"));
+const adminRoutes = require(path.join(__dirname, "/routes/admin"));
+
+function startWebServer() {
   var prom = new Promise(function(resolve, reject) {
     function configureRoutes(app) {
       app.use(loginRoutes);
+      app.use(adminRoutes);
 
       app.use(express.static("./public"));
     }
