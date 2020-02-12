@@ -5,25 +5,32 @@ const app = express();
 const fs = require("fs");
 const http = require("http");
 const https = require("https");
-const bodyParser = require("body-parser");
 const path = require("path");
-
-app.use(express.urlencoded({ extended: true }));
+const session = require("express-session");
+var sessionConfig = {
+  secret: 'longst5ringwithComplicatedStuff',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {}
+};
+app.use(express.urlencoded({
+  extended: true
+}));
 
 const loginRoutes = require(path.join(__dirname, "/routes/login"));
 const adminRoutes = require(path.join(__dirname, "/routes/admin"));
 
 function startWebServer() {
-  var prom = new Promise(function(resolve, reject) {
+  var prom = new Promise(function (resolve, reject) {
     function configureRoutes(app) {
       app.use(loginRoutes);
       app.use(adminRoutes);
 
       app.use(express.static("./public"));
     }
-    configureRoutes(app);
 
     if (app.get("env") === "development") {
+      app.use(session(sessionConfig));
       const server = http.createServer(app);
 
       global.nodeserver = server;
@@ -33,6 +40,9 @@ function startWebServer() {
         resolve();
       });
     } else {
+      app.set('trust proxy', 1) // trust first proxy
+      sessionConfig.cookie.secure = true;
+      app.use(session(sessionConfig));
       // Certificate
       const privateKey = fs.readFileSync(
         "/etc/letsencrypt/live/silverlanternslight.com/privkey.pem",
@@ -55,6 +65,7 @@ function startWebServer() {
         resolve();
       });
     }
+    configureRoutes(app);
   });
   return prom;
 }
