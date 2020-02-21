@@ -45,11 +45,11 @@ function startWebServer() {
       app.use(session(sessionConfig));
       // Certificate
       const privateKey = fs.readFileSync(
-        "/etc/letsencrypt/live/silverlanternslight.com/privkey.pem",
+        path.join(process.cwd(), "/etc/letsencrypt/live/silverlanternslight.com/privkey.pem"),
         "utf8"
       );
       const certificate = fs.readFileSync(
-        "/etc/letsencrypt/live/silverlanternslight.com/fullchain.pem",
+        path.join(process.cwd(), "/etc/letsencrypt/live/silverlanternslight.com/fullchain.pem"),
         "utf8"
       );
 
