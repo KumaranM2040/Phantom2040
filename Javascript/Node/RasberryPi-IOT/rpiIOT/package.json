@@ -6,6 +6,7 @@
     "start": "node_modules/.bin/gulp iotapprun",
     "prod": "NODE_ENV='production' node_modules/.bin/gulp --env prod iotapprun",
     "start_dbg": "node --inspect-brk ./node_modules/gulp/bin/gulp.js --verbose",
+    "build_docker_image": "sudo copyfiles /etc/letsencrypt/live/silverlanternslight.com/privkey.pem . && sudo copyfiles /etc/letsencrypt/live/silverlanternslight.com/fullchain.pem . && docker build -t kumaranm2040/iotapp .",
     "browser_sync": "node_modules/.bin/gulp --inspect-brk iotapprun --verbose BROWSER_SYNC='enable'"
   },
   "description": "An open source Bootstrap 4 admin theme used for an Raspbian IOT Project",
@@ -41,9 +42,9 @@
     "datatables.net-bs4": "1.10.19",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
+    "gulp": "4.0.2",
     "jquery": "3.4.1",
     "jquery.easing": "^1.4.1",
-    "nodemon": "^2.0.2",
     "onoff": "^5.0.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
@@ -52,7 +53,6 @@
   "devDependencies": {
     "browser-sync": "2.26.7",
     "del": "5.1.0",
-    "gulp": "4.0.2",
     "gulp-autoprefixer": "7.0.0",
     "gulp-clean-css": "4.2.0",
     "gulp-header": "2.0.9",
@@ -60,6 +60,7 @@
     "gulp-rename": "1.4.0",
     "gulp-sass": "4.0.2",
     "gulp-uglify": "3.0.2",
-    "merge-stream": "2.0.0"
+    "merge-stream": "2.0.0",
+    "nodemon": "^2.0.2"
   }
 }
