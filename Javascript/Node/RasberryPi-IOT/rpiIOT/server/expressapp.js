@@ -59,9 +59,9 @@ function startWebServer() {
       };
       const server = https.createServer(credentials, app);
       global.nodeserver = server;
-
-      server.listen(443, () => {
-        console.log("HTTPS Server running on port 443");
+      const portNumber = 8443;
+      server.listen(portNumber, () => {
+        console.log("HTTPS Server running on port "+portNumber);
         resolve();
       });
     }
