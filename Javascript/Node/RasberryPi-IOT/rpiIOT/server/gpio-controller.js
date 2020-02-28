@@ -18,9 +18,7 @@ function gpioInitialise() {
       GPIOControllerSocket.on("connection", function(socket) {
         console.log(
           "A new gpio-socket WebSocket namespace client connected with ID: " +
-            socket.client.id,
-          socket.client
-        );
+            socket.client.id);
         socket.on("GPIO", function(msg, fn) {
           console.log(msg);
           if (msg.toggle === true) {

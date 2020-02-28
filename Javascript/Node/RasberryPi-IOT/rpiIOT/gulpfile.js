@@ -7,6 +7,7 @@ const gulp = require("gulp");
 const cloudflareServerUpdate = require("./server/cloudflare-dns-a-record");
 const expressapp = require("./server/expressapp");
 const gpioInitialise = require("./server/gpio-controller");
+const dbConnectionInitialise = require("./server/db-connector");
 
 // Load package.json for banner
 const pkg = require("./package.json");
@@ -27,7 +28,8 @@ const banner = [
 const iotapprun = gulp.series(
   cloudflareServerUpdate,
   expressapp,
-  gpioInitialise
+  gpioInitialise,
+  dbConnectionInitialise.Initialise
 );
 
 setInterval(cloudflareServerUpdate, 1800000); // check every 30min for change in ipaddress and update CloudFlare if required

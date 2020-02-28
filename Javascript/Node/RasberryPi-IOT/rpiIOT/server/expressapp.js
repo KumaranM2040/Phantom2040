@@ -7,6 +7,23 @@ const http = require("http");
 const https = require("https");
 const path = require("path");
 const session = require("express-session");
+const expressNunjucks = require('express-nunjucks');
+const nunjucks = require('nunjucks');
+
+const isDev = app.get('env') === 'development';
+
+
+// const njk = expressNunjucks(app, {
+//   autoescape: true
+// });
+
+nunjucks.configure(path.join(__dirname,'views'), {
+  autoescape: true,
+  express: app,
+  watch: isDev,
+  noCache: isDev
+});
+
 var sessionConfig = {
   secret: 'longst5ringwithComplicatedStuff',
   resave: false,
@@ -16,20 +33,27 @@ var sessionConfig = {
 app.use(express.urlencoded({
   extended: true
 }));
+console.log('CWD directory is'+process.cwd()+'and __dirname is'+ __dirname);
+console.log('Pathjoin directory is '+path.join(__dirname,'views'));
+console.log('__dirname'+__dirname);
+console.log('__dirname/../'+__dirname+'/../');
+//app.set('views', __dirname);
 
 const loginRoutes = require(path.join(__dirname, "/routes/login"));
 const adminRoutes = require(path.join(__dirname, "/routes/admin"));
+const indexRoutes = require(path.join(__dirname, "/routes/index"));
 
 function startWebServer() {
   var prom = new Promise(function (resolve, reject) {
     function configureRoutes(app) {
       app.use(loginRoutes);
       app.use(adminRoutes);
-
-      app.use(express.static("./public"));
+      app.use(indexRoutes);
+console.log("path.join(process.cwd(), 'public') is " + path.join(process.cwd(), 'public'));
+      app.use(express.static(path.join(process.cwd(), 'public')));
     }
 
-    if (app.get("env") === "development") {
+    if (isDev) {
       app.use(session(sessionConfig));
       const server = http.createServer(app);
 

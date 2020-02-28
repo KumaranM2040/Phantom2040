@@ -3,7 +3,7 @@ const path = require('path');
 const users = require('../models/users');
 
 const router = express.Router();
-router.get('/login',(req,res,next) => {
-    res.sendfile(path.join(__dirname, '../../public/login.html'));
+router.get('/',(req,res,next) => {
+    res.render(path.join(__dirname,'../views/') +'index.njk');
 });
 module.exports = router;
