@@ -7,14 +7,20 @@ const router = express.Router();
 function isAdminUser(email, password){
     return users.isValidUser(email, password);
 }
-router.post('/admin',(req,res,next) => {
+router.post('/admin',async function (req,res,next) {
     console.log(req.body);
     req.session.IsAuthenticated = true;
-    isAdminUser(req.body.inputEmail, req.body.inputPassword).then(([row])=>{
-        console.log(row);
-        if (result){
-            res.render('charts',{ isAdmin: 'true'});
-        }
-    })
+    const result = await isAdminUser(req.body.inputEmail, req.body.inputPassword)
+    if (result){
+        res.render('index.njk',{ isAdmin: 'true', user: req.body.inputEmail});
+    }
+    // .then(function (result)
+    // {
+    //     console.log(result);
+    //     if (result){
+    //         res.render('charts.html',{ isAdmin: 'true'});
+    //     }
+    // })
+    
 });
 module.exports = router;

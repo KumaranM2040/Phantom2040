@@ -8,7 +8,12 @@ module.exports = class Users {
         this.loginTime = loginTime;
     }
 
-    static isValidUser(username, password){
-        return db.ExecuteQuery('select 1 from iotDb.users where Username='+username+' AND Password='+password);
+    static async isValidUser(username, password){
+        console.log('userinput: ' + username + password)
+        return await db.ExecuteQuery(`select * from iotDb.users where Username='${username}' AND Password='${password}'`);
+        // return new Promise(function (resolve, reject){
+        //     let a = db.ExecuteQuery(`select * from iotDb.users where Username='${username}' AND Password='${password}'`);
+        //     resolve(a);
+        // });
     }
 }

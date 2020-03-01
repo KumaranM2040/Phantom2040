@@ -7,15 +7,20 @@ const http = require("http");
 const https = require("https");
 const path = require("path");
 const session = require("express-session");
-const expressNunjucks = require('express-nunjucks');
 const nunjucks = require('nunjucks');
+var MySQLStore = require('express-mysql-session')(session);
 
+const options = {
+  host: 'localhost',
+  port: '3306',
+  user: 'iotuser',
+  password: 'Password1',
+  database: 'iotDb',
+  connectionlimit: 20,
+};
+
+const store = new MySQLStore(options)
 const isDev = app.get('env') === 'development';
-
-
-// const njk = expressNunjucks(app, {
-//   autoescape: true
-// });
 
 nunjucks.configure(path.join(__dirname,'views'), {
   autoescape: true,
@@ -28,7 +33,8 @@ var sessionConfig = {
   secret: 'longst5ringwithComplicatedStuff',
   resave: false,
   saveUninitialized: false,
-  cookie: {}
+  cookie: {},
+  store:store
 };
 app.use(express.urlencoded({
   extended: true
@@ -37,7 +43,6 @@ console.log('CWD directory is'+process.cwd()+'and __dirname is'+ __dirname);
 console.log('Pathjoin directory is '+path.join(__dirname,'views'));
 console.log('__dirname'+__dirname);
 console.log('__dirname/../'+__dirname+'/../');
-//app.set('views', __dirname);
 
 const loginRoutes = require(path.join(__dirname, "/routes/login"));
 const adminRoutes = require(path.join(__dirname, "/routes/admin"));
@@ -49,11 +54,11 @@ function startWebServer() {
       app.use(loginRoutes);
       app.use(adminRoutes);
       app.use(indexRoutes);
-console.log("path.join(process.cwd(), 'public') is " + path.join(process.cwd(), 'public'));
       app.use(express.static(path.join(process.cwd(), 'public')));
     }
 
     if (isDev) {
+      console.log(sessionConfig);
       app.use(session(sessionConfig));
       const server = http.createServer(app);
 

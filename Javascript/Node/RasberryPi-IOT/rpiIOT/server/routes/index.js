@@ -4,6 +4,6 @@ const users = require('../models/users');
 
 const router = express.Router();
 router.get('/',(req,res,next) => {
-    res.render(path.join(__dirname,'../views/') +'index.njk');
+    res.render('index.njk');
 });
 module.exports = router;

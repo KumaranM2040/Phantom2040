@@ -1,13 +1,18 @@
 const mariadb = require('mariadb');
-const pool = mariadb.createPool({
+const options = {
     host: 'localhost',
+    port: '3306',
     user: 'iotuser',
     password: 'Password1',
-    connectionLimit: 20
-});
-console.log('Number of Active MariaDB connections is: '+ pool.activeConnections());
-async function Initialise() {
+    database: 'iotDb',
+    connectionlimit: 20
+};
+
+const pool = mariadb.createPool(options);
+
+async function InitialiseMariaDBConnection() {
     console.log('Current active connections:' + pool.activeConnections());
+    return ExecuteQuery("Select * from iotDb.users")
 }
 
 async function ExecuteNonQuery(statement, payload) {
@@ -26,20 +31,27 @@ async function ExecuteNonQuery(statement, payload) {
 
 async function ExecuteQuery(query) {
     let conn;
+    let rows;
+    console.log(query);
     try {
         conn = await pool.getConnection();
         console.log("Executing Query");
-        const rows = await conn.query(query);
-        console.log(rows[0]); //[ {val: 1}, meta: ... ]
+        rows = await conn.query(query);
+        //return rows;
+        //console.log(rows[0]); //[ {val: 1}, meta: ... ]
     } catch (err) {
         throw err;
     } finally {
-        if (conn) return conn.end();
+        if (conn) {
+            conn.end();
+        }
+        return rows;
+            
     }
 }
 
 module.exports = {
-    Initialise: Initialise,
+    InitialiseMariaDBConnection: InitialiseMariaDBConnection,
     ExecuteNonQuery: ExecuteNonQuery,
-    ExecuteQuery: ExecuteQuery
+    ExecuteQuery: ExecuteQuery,
 }
