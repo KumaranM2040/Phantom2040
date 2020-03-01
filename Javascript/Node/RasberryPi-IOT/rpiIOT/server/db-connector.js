@@ -46,7 +46,7 @@ async function ExecuteQuery(query) {
             conn.end();
         }
         return rows;
-            
+
     }
 }
 

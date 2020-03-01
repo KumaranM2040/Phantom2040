@@ -1,73 +1,74 @@
 {
-  "title": "IOT Dashboard",
-  "name": "raspberrypiiot",
-  "version": "1.0.0",
-  "scripts": {
-    "start": "node_modules/.bin/gulp iotapprun",
-    "prod": "NODE_ENV='production' node_modules/.bin/gulp --env prod iotapprun",
-    "start_dbg": "node --inspect-brk ./node_modules/gulp/bin/gulp.js --verbose",
-    "build_docker_image": "sudo copyfiles /etc/letsencrypt/live/silverlanternslight.com/privkey.pem . && sudo copyfiles /etc/letsencrypt/live/silverlanternslight.com/fullchain.pem . && docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t kumaranm2040/iotapp .",
-    "browser_sync": "node_modules/.bin/gulp --inspect-brk iotapprun --verbose BROWSER_SYNC='enable'"
-  },
-  "description": "An open source Bootstrap 4 admin theme used for an Raspbian IOT Project",
-  "keywords": [
-    "css",
-    "sass",
-    "html",
-    "responsive",
-    "theme",
-    "template",
-    "admin",
-    "app"
-  ],
-  "homepage": "https://www.silverlanternslight.com",
-  "bugs": {
-    "url": "https://github.com/BlackrockDigital/startbootstrap-sb-admin-2/issues",
-    "email": "kumaranm2040@gmail.com"
-  },
-  "license": "MIT",
-  "author": "Start Bootstrap",
-  "contributors": [
-    "Kumaran Moodley (kumaranm2040@gmail.com)"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/BlackrockDigital/startbootstrap-sb-admin-2.git"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "5.10.2",
-    "body-parser": "^1.19.0",
-    "bootstrap": "4.3.1",
-    "chart.js": "2.8.0",
-    "connect-session-knex": "^1.5.0",
-    "datatables.net-bs4": "1.10.19",
-    "express": "^4.17.1",
-    "express-mysql-session": "^2.1.3",
-    "express-nunjucks": "^2.2.3",
-    "express-session": "^1.17.0",
-    "gulp": "4.0.2",
-    "jquery": "3.4.1",
-    "jquery.easing": "^1.4.1",
-    "mariadb": "^2.2.0",
-    "mysql": "^2.18.1",
-    "nunjucks": "^3.2.0",
-    "onoff": "^5.0.0",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.8",
-    "socket.io": "^2.3.0",
-    "socketio": "^1.0.0"
-  },
-  "devDependencies": {
-    "browser-sync": "2.26.7",
-    "del": "5.1.0",
-    "gulp-autoprefixer": "7.0.0",
-    "gulp-clean-css": "4.2.0",
-    "gulp-header": "2.0.9",
-    "gulp-plumber": "^1.2.1",
-    "gulp-rename": "1.4.0",
-    "gulp-sass": "4.0.2",
-    "gulp-uglify": "3.0.2",
-    "merge-stream": "2.0.0",
-    "nodemon": "^2.0.2"
-  }
+    "title": "IOT Dashboard",
+    "name": "raspberrypiiot",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "node_modules/.bin/gulp iotapprun",
+        "prod": "NODE_ENV='production' node_modules/.bin/gulp --env prod iotapprun",
+        "start_dbg": "node --inspect-brk ./node_modules/gulp/bin/gulp.js --verbose",
+        "build_docker_image": "sudo copyfiles /etc/letsencrypt/live/silverlanternslight.com/privkey.pem . && sudo copyfiles /etc/letsencrypt/live/silverlanternslight.com/fullchain.pem . && docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t kumaranm2040/iotapp .",
+        "run_docker_image": "docker run -it --net=host kumaranm2040/iotapp:latest",
+        "browser_sync": "node_modules/.bin/gulp --inspect-brk iotapprun --verbose BROWSER_SYNC='enable'"
+    },
+    "description": "An open source Bootstrap 4 admin theme used for an Raspbian IOT Project",
+    "keywords": [
+        "css",
+        "sass",
+        "html",
+        "responsive",
+        "theme",
+        "template",
+        "admin",
+        "app"
+    ],
+    "homepage": "https://www.silverlanternslight.com",
+    "bugs": {
+        "url": "https://github.com/BlackrockDigital/startbootstrap-sb-admin-2/issues",
+        "email": "kumaranm2040@gmail.com"
+    },
+    "license": "MIT",
+    "author": "Start Bootstrap",
+    "contributors": [
+        "Kumaran Moodley (kumaranm2040@gmail.com)"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/BlackrockDigital/startbootstrap-sb-admin-2.git"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "5.10.2",
+        "body-parser": "^1.19.0",
+        "bootstrap": "4.3.1",
+        "chart.js": "2.8.0",
+        "connect-session-knex": "^1.5.0",
+        "datatables.net-bs4": "1.10.19",
+        "express": "^4.17.1",
+        "express-mysql-session": "^2.1.3",
+        "express-nunjucks": "^2.2.3",
+        "express-session": "^1.17.0",
+        "gulp": "4.0.2",
+        "jquery": "3.4.1",
+        "jquery.easing": "^1.4.1",
+        "mariadb": "^2.2.0",
+        "mysql": "^2.18.1",
+        "nunjucks": "^3.2.0",
+        "onoff": "^5.0.0",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.8",
+        "socket.io": "^2.3.0",
+        "socketio": "^1.0.0"
+    },
+    "devDependencies": {
+        "browser-sync": "2.26.7",
+        "del": "5.1.0",
+        "gulp-autoprefixer": "7.0.0",
+        "gulp-clean-css": "4.2.0",
+        "gulp-header": "2.0.9",
+        "gulp-plumber": "^1.2.1",
+        "gulp-rename": "1.4.0",
+        "gulp-sass": "4.0.2",
+        "gulp-uglify": "3.0.2",
+        "merge-stream": "2.0.0",
+        "nodemon": "^2.0.2"
+    }
 }
