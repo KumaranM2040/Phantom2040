@@ -10,7 +10,7 @@ function isAdminUser(email, password) {
 router.post('/admin', async function(req, res, next) {
     console.log(req.body);
     const result = await isAdminUser(req.body.inputEmail, req.body.inputPassword)
-    if (result) {
+    if (result.length > 0) {
         req.session.IsAuthenticated = true;
         req.session.invalidUsernamePasswordCombination = false;
         req.session.User = req.body.inputEmail;

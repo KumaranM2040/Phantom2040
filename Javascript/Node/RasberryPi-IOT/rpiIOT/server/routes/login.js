@@ -9,6 +9,6 @@ router.get('/login', (req, res, next) => {
 
 router.post('/logout', (req, res, next) => {
     req.session.destroy();
-    res.render('index.njk');
+    res.redirect('/');
 });
 module.exports = router;
