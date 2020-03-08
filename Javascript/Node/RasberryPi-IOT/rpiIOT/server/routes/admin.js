@@ -9,10 +9,15 @@ function isAdminUser(email, password) {
 }
 router.post('/admin', async function(req, res, next) {
     console.log(req.body);
-    req.session.IsAuthenticated = true;
     const result = await isAdminUser(req.body.inputEmail, req.body.inputPassword)
     if (result) {
-        res.render('index.njk', { isAdmin: 'true', user: req.body.inputEmail });
+        req.session.IsAuthenticated = true;
+        req.session.invalidUsernamePasswordCombination = false;
+        req.session.User = req.body.inputEmail;
+        res.redirect('/');
+    } else {
+        req.session.invalidUsernamePasswordCombination = true;
+        res.redirect('back');
     }
 });
 module.exports = router;
