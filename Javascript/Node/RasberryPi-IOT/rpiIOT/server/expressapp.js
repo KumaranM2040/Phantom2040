@@ -34,7 +34,8 @@ var sessionConfig = {
     resave: false,
     saveUninitialized: false,
     cookie: {},
-    store: store
+    store: store,
+    expires: new Date(Date.now() + (15 * 60 * 1000)) //15min session
 };
 app.use(express.urlencoded({
     extended: true
