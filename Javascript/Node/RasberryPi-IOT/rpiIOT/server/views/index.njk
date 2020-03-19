@@ -370,64 +370,9 @@
           </div>
 
 {% if isAdmin %}
-          <div  class="row">
-              <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                  <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                      <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Relay1 State</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id='Relay1State'>?</div>
-                      </div>
-                      <button class="col mr-2 btn btn-primary btn-circle btn-lg" id='btnRelay1'>1</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                  <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                      <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Relay2 State</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id='Relay2State'>?</div>
-                      </div>
-                      <button class="col mr-2 btn btn-primary btn-circle btn-lg" id='btnRelay2'>2</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+{% include "html-templates/iot-buttons.html" %}
 
-              <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                  <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                      <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Relay3 State</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id='Relay3State'>?</div>
-                      </div>
-                      <button class="col mr-2 btn btn-primary btn-circle btn-lg" id='btnRelay3'>3</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-  
-              <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                  <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                      <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Relay4 State</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id='Relay4State'>?</div>
-                      </div>
-                      <button class="col mr-2 btn btn-primary btn-circle btn-lg" id='btnRelay4'>4</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
 {% endif %}
 
         </div>
@@ -512,8 +457,8 @@
               </div>
             </div>
           </div>
-
-          <!-- Content Row -->
+          
+</div>  <!-- Content Row -->
 
           <div class="row">
 
