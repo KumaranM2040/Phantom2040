@@ -1,22 +1,9 @@
 const express = require('express');
-const users = require('../models/users');
+
+const adminController = require('../controllers/admin');
 
 const router = express.Router();
 
-function isAdminUser(email, password) {
-    return users.isValidUser(email, password);
-}
-router.post('/admin', async function(req, res, next) {
-    console.log(req.body);
-    const result = await isAdminUser(req.body.inputEmail, req.body.inputPassword)
-    if (result.length > 0) {
-        req.session.IsAuthenticated = true;
-        req.session.invalidUsernamePasswordCombination = false;
-        req.session.User = req.body.inputEmail;
-        res.redirect('/');
-    } else {
-        req.session.invalidUsernamePasswordCombination = true;
-        res.redirect('back');
-    }
-});
+router.post('/admin', adminController.postAdmin);
+
 module.exports = router;
