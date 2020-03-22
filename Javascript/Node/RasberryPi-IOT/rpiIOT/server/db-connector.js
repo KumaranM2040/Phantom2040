@@ -15,43 +15,37 @@ async function InitialiseMariaDBConnection() {
     return ExecuteQuery("Select * from iotDb.users")
 }
 
-async function ExecuteNonQuery(statement, payload) {
-    let conn;
-    try {
-        conn = await pool.getConnection();
-        console.log("Executing NonQuery");
-        const res = await conn.query(statement, payload);
-        console.log(res); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
-    } catch (err) {
-        throw err;
-    } finally {
-        if (conn) return conn.end();
+function mysql2MariadbPlaceholderTranslator(statement) {
+
+    if (statement.query.includes("??")) {
+        statement.query = statement.query.replace("??", statement.payload[0]);
+        statement.payload = statement.payload.slice(1);
     }
 }
 
-async function ExecuteQuery(query) {
+async function ExecuteQuery(query, payload) {
     let conn;
     let rows;
+    let statement = { query, payload };
     console.log(query);
     try {
         conn = await pool.getConnection();
         console.log("Executing Query");
-        rows = await conn.query(query);
-        //return rows;
-        //console.log(rows[0]); //[ {val: 1}, meta: ... ]
+
+        mysql2MariadbPlaceholderTranslator(statement);
+        rows = await conn.query(statement.query, statement.payload);
     } catch (err) {
+        console.log(`Code: ${err.code} Message${err.stack}`);
         throw err;
     } finally {
         if (conn) {
             conn.end();
         }
         return rows;
-
     }
 }
 
 module.exports = {
     InitialiseMariaDBConnection: InitialiseMariaDBConnection,
-    ExecuteNonQuery: ExecuteNonQuery,
     ExecuteQuery: ExecuteQuery,
 }

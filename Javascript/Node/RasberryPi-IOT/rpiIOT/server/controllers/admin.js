@@ -1,20 +1,8 @@
 const users = require('../models/users');
 
-function isAdminUser(email, password) {
-    return users.isValidUser(email, password);
-}
-
-async function postAdmin(req, res, next) {
-    console.log(req.body);
-    const result = await isAdminUser(req.body.inputEmail, req.body.inputPassword)
-    if (result.length > 0) {
-        req.session.IsAuthenticated = true;
-        req.session.invalidUsernamePasswordCombination = false;
-        req.session.User = req.body.inputEmail;
-        res.redirect('/');
-    } else {
-        req.session.invalidUsernamePasswordCombination = true;
-        res.redirect('back');
+function getAdmin(req, res, next) {
+    if (req.session.IsAuthenticated) {
+        res.render('html-templates/scheduler.html', { isAdmin: req.session.IsAuthenticated, User: req.session.User });
     }
 }
-module.exports = { postAdmin };
+module.exports = { getAdmin };

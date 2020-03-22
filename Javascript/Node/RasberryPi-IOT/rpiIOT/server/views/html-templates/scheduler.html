@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>IOT Sсheduler</title>
+    <meta charset="utf-8">
+    <!-- scheduler -->
+    <script src="https://cdn.dhtmlx.com/scheduler/edge/dhtmlxscheduler.js" charset="utf-8"></script>
+    <link href="https://cdn.dhtmlx.com/scheduler/edge/dhtmlxscheduler_material.css" rel="stylesheet" type="text/css" charset="utf-8">
+    <style>
+        html,
+        body {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+        <div class="dhx_cal_navline">
+            <div class="dhx_cal_prev_button">&nbsp;</div>
+            <div class="dhx_cal_next_button">&nbsp;</div>
+            <div class="dhx_cal_today_button"></div>
+            <div class="dhx_cal_date"></div>
+            <div class="dhx_cal_tab" name="day_tab"></div>
+            <div class="dhx_cal_tab" name="week_tab"></div>
+            <div class="dhx_cal_tab" name="month_tab"></div>
+        </div>
+        <div class="dhx_cal_header"></div>
+        <div class="dhx_cal_data"></div>
+    </div>
+    <script>
+        // set format of dates in the data source
+        scheduler.config.xml_date = "%Y-%m-%d %H:%i";
+
+        scheduler.init('scheduler_here', new Date(2020, 2, 1), "month");
+
+        scheduler.load("/events", "json");
+
+        var dp = new dataProcessor("/events");
+        // use RESTful API on the backend
+        dp.enableDebug(true);
+        dp.setTransactionMode("REST");
+
+        dp.attachEvent("onBeforeUpdate", function(id, state, data) {
+
+            if (state === "deleted") {
+                // /* clear dataprocessor 'in progress' state */
+                // dp.setUpdated(id, false);
+
+                // /*  remove event from the calendar. The second argument is `silent` mode, so this call won't invoke the dataprocessor again  */
+                // scheduler.deleteEvent(id, true);
+
+                // /*  send your ajax requests  */
+                // var data = {
+                //     id: ev.planning_id,
+                //     service_call_id: ev.service_call_id
+                // }
+                // $.ajax({
+                //     url: '/events',
+                //     type: 'DELETE',
+                //     data: data
+                // });
+
+                // return false;
+            }
+            return true;
+        });
+
+
+        dp.init(scheduler);
+    </script>
+</body>
+
+</html>
