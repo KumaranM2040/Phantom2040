@@ -36,7 +36,7 @@
         // set format of dates in the data source
         scheduler.config.xml_date = "%Y-%m-%d %H:%i";
 
-        scheduler.init('scheduler_here', new Date(2020, 2, 1), "month");
+        scheduler.init('scheduler_here', Date.now().Date, "month");
 
         scheduler.load("/events", "json");
 
