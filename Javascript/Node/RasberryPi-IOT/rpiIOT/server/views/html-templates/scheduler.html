@@ -1,78 +1,117 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
-    <title>IOT Sсheduler</title>
-    <meta charset="utf-8">
-    <!-- scheduler -->
-    <script src="https://cdn.dhtmlx.com/scheduler/edge/dhtmlxscheduler.js" charset="utf-8"></script>
-    <link href="https://cdn.dhtmlx.com/scheduler/edge/dhtmlxscheduler_material.css" rel="stylesheet" type="text/css" charset="utf-8">
-    <style>
-        html,
-        body {
-            margin: 0px;
-            padding: 0px;
-            height: 100%;
-            overflow: hidden;
-        }
-    </style>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>TOAST UI Calendar Template For Popup DEMO</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css">
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+    <link rel="stylesheet" type="text/css" href="../dist/tui-calendar.css">
+    <link rel="stylesheet" type="text/css" href="./css/default.css">
+    <link rel="stylesheet" type="text/css" href="./css/icons.css">
 </head>
 
 <body>
-    <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
-        <div class="dhx_cal_navline">
-            <div class="dhx_cal_prev_button">&nbsp;</div>
-            <div class="dhx_cal_next_button">&nbsp;</div>
-            <div class="dhx_cal_today_button"></div>
-            <div class="dhx_cal_date"></div>
-            <div class="dhx_cal_tab" name="day_tab"></div>
-            <div class="dhx_cal_tab" name="week_tab"></div>
-            <div class="dhx_cal_tab" name="month_tab"></div>
+    <div class="code-html">
+        <div id="menu">
+            <span id="menu-navi">
+        <button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">Today</button>
+        <button type="button" class="btn btn-default btn-sm move-day" data-action="move-prev">
+          <i class="calendar-icon ic-arrow-line-left" data-action="move-prev"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
+          <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>
+        </button>
+      </span>
+            <span id="renderRange" class="render-range"></span>
         </div>
-        <div class="dhx_cal_header"></div>
-        <div class="dhx_cal_data"></div>
+
+        <div id="calendar"></div>
     </div>
-    <script>
-        // set format of dates in the data source
-        scheduler.config.xml_date = "%Y-%m-%d %H:%i";
 
-        scheduler.init('scheduler_here', Date.now().Date, "month");
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
+    <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.13/chance.min.js"></script>
+    <script src="../dist/tui-calendar.js"></script>
+    <script src="./js/data/calendars.js"></script>
+    <script src="./js/data/schedules.js"></script>
+    <script type="text/javascript" class="code-js">
+        // register templates
+        const templates = {
+            popupIsAllDay: function() {
+                return 'All Day';
+            },
+            popupStateFree: function() {
+                return 'Free';
+            },
+            popupStateBusy: function() {
+                return 'Busy';
+            },
+            titlePlaceholder: function() {
+                return 'Subject';
+            },
+            locationPlaceholder: function() {
+                return 'Location';
+            },
+            startDatePlaceholder: function() {
+                return 'Start date';
+            },
+            endDatePlaceholder: function() {
+                return 'End date';
+            },
+            popupSave: function() {
+                return 'Save';
+            },
+            popupUpdate: function() {
+                return 'Update';
+            },
+            popupDetailDate: function(isAllDay, start, end) {
+                var isSameDate = moment(start).isSame(end);
+                var endFormat = (isSameDate ? '' : 'YYYY.MM.DD ') + 'hh:mm a';
 
-        scheduler.load("/events", "json");
+                if (isAllDay) {
+                    return moment(start).format('YYYY.MM.DD') + (isSameDate ? '' : ' - ' + moment(end).format('YYYY.MM.DD'));
+                }
 
-        var dp = new dataProcessor("/events");
-        // use RESTful API on the backend
-        dp.enableDebug(true);
-        dp.setTransactionMode("REST");
-
-        dp.attachEvent("onBeforeUpdate", function(id, state, data) {
-
-            if (state === "deleted") {
-                // /* clear dataprocessor 'in progress' state */
-                // dp.setUpdated(id, false);
-
-                // /*  remove event from the calendar. The second argument is `silent` mode, so this call won't invoke the dataprocessor again  */
-                // scheduler.deleteEvent(id, true);
-
-                // /*  send your ajax requests  */
-                // var data = {
-                //     id: ev.planning_id,
-                //     service_call_id: ev.service_call_id
-                // }
-                // $.ajax({
-                //     url: '/events',
-                //     type: 'DELETE',
-                //     data: data
-                // });
-
-                // return false;
+                return (moment(start).format('YYYY.MM.DD hh:mm a') + ' - ' + moment(end).format(endFormat));
+            },
+            popupDetailLocation: function(schedule) {
+                return 'Location : ' + schedule.location;
+            },
+            popupDetailUser: function(schedule) {
+                return 'User : ' + (schedule.attendees || []).join(', ');
+            },
+            popupDetailState: function(schedule) {
+                return 'State : ' + schedule.state || 'Busy';
+            },
+            popupDetailRepeat: function(schedule) {
+                return 'Repeat : ' + schedule.recurrenceRule;
+            },
+            popupDetailBody: function(schedule) {
+                return 'Body : ' + schedule.body;
+            },
+            popupEdit: function() {
+                return 'Edit';
+            },
+            popupDelete: function() {
+                return 'Delete';
             }
-            return true;
+        };
+
+        var cal = new tui.Calendar('#calendar', {
+            defaultView: 'month',
+            template: templates,
+            useCreationPopup: true,
+            useDetailPopup: true
         });
-
-
-        dp.init(scheduler);
     </script>
+    <script src="./js/default.js"></script>
 </body>
 
 </html>
