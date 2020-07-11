@@ -57,7 +57,6 @@ console.log('__dirname' + __dirname);
 console.log('__dirname/../' + __dirname + '/../');
 
 const authRoutes = require(path.join(__dirname, "/routes/auth"));
-const schedulerRoutes = require(path.join(__dirname, "/routes/scheduler"));
 const adminRoutes = require(path.join(__dirname, "/routes/admin"));
 const indexRoutes = require(path.join(__dirname, "/routes/index"));
 const relayRoutes = require(path.join(__dirname, "/routes/relays"));
@@ -69,7 +68,6 @@ function startWebServer() {
             app.use(adminRoutes);
             app.use(indexRoutes);
             app.use(relayRoutes);
-            app.use(schedulerRoutes);
             app.use(express.static(path.join(process.cwd(), 'public')));
         }
 

@@ -8,6 +8,7 @@ const cloudflareServerUpdate = require("./server/cloudflare-dns-a-record");
 const expressapp = require("./server/expressapp");
 const gpioInitialise = require("./server/gpio-controller");
 const dbConnector = require("./server/db-connector");
+const scheduler = require("./server/util/scheduler");
 
 // Load package.json for banner
 const pkg = require("./package.json");
@@ -16,13 +17,14 @@ let iotapprun;
 
 // Define complex tasks
 if (isDev) {
-    iotapprun = gulp.series(dbConnector.InitialiseMariaDBConnection, expressapp);
+    iotapprun = gulp.series(dbConnector.InitialiseMariaDBConnection, expressapp, gpioInitialise, scheduler.InitialiseSchedule);
 } else {
     iotapprun = gulp.series(
         cloudflareServerUpdate,
         dbConnector.InitialiseMariaDBConnection,
         expressapp,
-        gpioInitialise
+        gpioInitialise,
+        scheduler.InitialiseSchedule
     );
     setInterval(cloudflareServerUpdate, 1800000); // check every 30min for change in ipaddress and update CloudFlare if required
 }
