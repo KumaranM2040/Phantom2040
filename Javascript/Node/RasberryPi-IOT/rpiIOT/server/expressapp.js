@@ -9,6 +9,7 @@ const path = require("path");
 const session = require("express-session");
 const nunjucks = require('nunjucks');
 const helmet = require("helmet");
+var bodyParser = require('body-parser')
 
 var MySQLStore = require('express-mysql-session')(session);
 
@@ -40,9 +41,16 @@ var sessionConfig = {
     expires: new Date(Date.now() + (15 * 60 * 1000)) //15min session
 };
 app.use(helmet());
-app.use(express.urlencoded({
-    extended: true
-}));
+// app.use(express.urlencoded({
+//     extended: true
+// }));
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// parse application/json
+app.use(bodyParser.json())
+
 console.log('CWD directory is' + process.cwd() + 'and __dirname is' + __dirname);
 console.log('Pathjoin directory is ' + path.join(__dirname, 'views'));
 console.log('__dirname' + __dirname);
@@ -52,6 +60,7 @@ const authRoutes = require(path.join(__dirname, "/routes/auth"));
 const schedulerRoutes = require(path.join(__dirname, "/routes/scheduler"));
 const adminRoutes = require(path.join(__dirname, "/routes/admin"));
 const indexRoutes = require(path.join(__dirname, "/routes/index"));
+const relayRoutes = require(path.join(__dirname, "/routes/relays"));
 
 function startWebServer() {
     var prom = new Promise(function(resolve, reject) {
@@ -59,6 +68,7 @@ function startWebServer() {
             app.use(authRoutes);
             app.use(adminRoutes);
             app.use(indexRoutes);
+            app.use(relayRoutes);
             app.use(schedulerRoutes);
             app.use(express.static(path.join(process.cwd(), 'public')));
         }
