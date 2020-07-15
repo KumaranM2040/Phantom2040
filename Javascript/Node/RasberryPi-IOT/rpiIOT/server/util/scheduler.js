@@ -19,7 +19,7 @@ async function InitialiseSchedule() {
 }
 
 function HandleEvent(data) {
-    console.log(`Event Occured ${Date.now()}`);
+    console.log(`Event Occured ${new Date()}`);
     console.log(`Data at HandleEvent stage is ${JSON.stringify(data)}`);
     gpio.SetRelayState(relayMap[data.relayInformation.relay], data.relayInformation.relayState);
     setTimeout(function() {
@@ -34,7 +34,8 @@ function ScheduleAllJobs(schedule) {
 }
 
 function _scheduleJobs(date, method, data) {
-    if (date > Date.now()) {
+    if (date > new Date()) {
+        console.log(`Scheduling job for ${date}`);
         console.log(`Data at binding stage is ${JSON.stringify(data)}`);
         scheduledJobs.push(schedule.scheduleJob(date, method.bind(null, data)));
     } else {
