@@ -4,10 +4,10 @@ const relayMap = {};
 function InitialiseRelayGpio() {
 
     if (Gpio.accessible) {
-        relayMap['relayGPIO1'] = new Gpio(17, "out");
-        relayMap['relayGPIO2'] = new Gpio(27, "out");
-        relayMap['relayGPIO3'] = new Gpio(10, "out");
-        relayMap['relayGPIO4'] = new Gpio(11, "out");
+        relayMap['relayGPIO1'] = new Gpio(17, 'high', 'none', { activeLow: true });
+        relayMap['relayGPIO2'] = new Gpio(27, 'high', 'none', { activeLow: true });
+        relayMap['relayGPIO3'] = new Gpio(10, 'high', 'none', { activeLow: true });
+        relayMap['relayGPIO4'] = new Gpio(11, 'high', 'none', { activeLow: true });
         return Object.keys(relayMap);
     }
     return false;
