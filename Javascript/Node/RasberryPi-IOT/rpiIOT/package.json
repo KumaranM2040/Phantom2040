@@ -6,7 +6,8 @@
         "start": "NODE_ENV='development' node_modules/.bin/gulp iotapprun",
         "prod": "NODE_ENV='production' node_modules/.bin/gulp --env prod iotapprun",
         "start_dbg": "node --inspect-brk ./node_modules/gulp/bin/gulp.js --verbose",
-        "build_docker_image": "sudo copyfiles /etc/letsencrypt/live/silverlanternslight.com/privkey.pem . && sudo copyfiles /etc/letsencrypt/live/silverlanternslight.com/fullchain.pem . && docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t kumaranm2040/iotapp .",
+        "copy_ssl_certificate": "sudo cp /etc/letsencrypt/live/silverlanternslight.com-0001/privkey.pem ./etc/letsencrypt/live/silverlanternslight.com/privkey.pem && sudo cp /etc/letsencrypt/live/silverlanternslight.com-0001/fullchain.pem ./etc/letsencrypt/live/silverlanternslight.com/fullchain.pem",
+        "build_docker_image": "sudo cp /etc/letsencrypt/live/silverlanternslight.com-0001/privkey.pem ./privkey.pem && sudo cp /etc/letsencrypt/live/silverlanternslight.com-0001/fullchain.pem ./fullchain.pem && docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t kumaranm2040/iotapp .",
         "run_docker_image": "docker run -it --net=host --privileged -e TZ=Africa/Johannesburg kumaranm2040/iotapp:latest",
         "browser_sync": "node_modules/.bin/gulp --inspect-brk iotapprun --verbose BROWSER_SYNC='enable'"
     },
