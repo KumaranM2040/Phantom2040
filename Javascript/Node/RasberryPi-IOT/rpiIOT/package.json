@@ -64,7 +64,7 @@
         "xss-filters": "^1.2.7"
     },
     "devDependencies": {
-        "browser-sync": "2.26.7",
+        "browser-sync": "^2.26.13",
         "del": "5.1.0",
         "gulp-autoprefixer": "7.0.0",
         "gulp-clean-css": "4.2.0",
