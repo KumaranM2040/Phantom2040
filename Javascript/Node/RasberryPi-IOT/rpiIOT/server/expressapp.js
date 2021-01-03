@@ -74,6 +74,7 @@ function startWebServer() {
 
         if (isDev) {
             console.log(sessionConfig);
+            sessionConfig.cookie.secure = true;
             app.use(session(sessionConfig));
 
             // you'll need these headers if your API is deployed on a different domain than a public page

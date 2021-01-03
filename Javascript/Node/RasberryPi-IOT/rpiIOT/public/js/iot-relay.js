@@ -1,6 +1,6 @@
 (function($){
     "use strict"; // Start of use strict
-    var socket = io('/gpio-socket');
+    var socket = io('/iot/gpio-socket');
 
     function updateRelayStatus(relay, status){
       console.log('updateRelayStatus');
@@ -19,11 +19,11 @@
           break;
       }
     }
-    
+
     function onClickHandler(obj) {
       console.log(obj.target.id + ' has been hit');
-      
-      
+
+
       var result = socket.emit('GPIO', { relay: obj.target.id, toggle: true}, updateRelayStatus);
       console.log(result);
     }

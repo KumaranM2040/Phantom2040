@@ -10,7 +10,7 @@ function gpioInitialise() {
             relays.forEach((element, index) => {
                 relayMap[`btnRelay${index+1}`] = element;
             });
-            var GPIOControllerSocket = io.of("/gpio-socket");
+            var GPIOControllerSocket = io.of("/iot/gpio-socket");
             GPIOControllerSocket.on("connection", function(socket) {
                 console.log(
                     "A new gpio-socket WebSocket namespace client connected with ID: " +
@@ -33,7 +33,7 @@ function gpioInitialise() {
         } else {
             const io = require("socket.io")(global.nodeserver);
 
-            var GPIOControllerSocket = io.of("/gpio-socket");
+            var GPIOControllerSocket = io.of("/iot/gpio-socket");
             GPIOControllerSocket.on("connection", function(socket) {
                 socket.on("GPIO", function(msg, fn) {
                     socket.emit("relayState", {

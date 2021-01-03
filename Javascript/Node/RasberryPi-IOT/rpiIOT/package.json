@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "scripts": {
         "start": "NODE_ENV='development' node_modules/.bin/gulp iotapprun",
-        "prod": "NODE_ENV='production' node_modules/.bin/gulp --env prod iotapprun",
+        "prod": "NODE_ENV='development' node_modules/.bin/gulp --env dev iotapprun",
         "start_dbg": "node --inspect-brk ./node_modules/gulp/bin/gulp.js --verbose",
         "copy_ssl_certificate": "sudo cp /etc/letsencrypt/live/silverlanternslight.com-0001/privkey.pem ./etc/letsencrypt/live/silverlanternslight.com/privkey.pem && sudo cp /etc/letsencrypt/live/silverlanternslight.com-0001/fullchain.pem ./etc/letsencrypt/live/silverlanternslight.com/fullchain.pem",
         "build_docker_image": "sudo cp /etc/letsencrypt/live/silverlanternslight.com-0001/privkey.pem ./privkey.pem && sudo cp /etc/letsencrypt/live/silverlanternslight.com-0001/fullchain.pem ./fullchain.pem && docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t kumaranm2040/iotapp .",
