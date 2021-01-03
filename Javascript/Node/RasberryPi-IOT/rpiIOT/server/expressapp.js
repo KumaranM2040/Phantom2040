@@ -56,6 +56,7 @@ console.log('Pathjoin directory is ' + path.join(__dirname, 'views'));
 console.log('__dirname' + __dirname);
 console.log('__dirname/../' + __dirname + '/../');
 
+const basePath = '/iot';
 const authRoutes = require(path.join(__dirname, "/routes/auth"));
 const adminRoutes = require(path.join(__dirname, "/routes/admin"));
 const indexRoutes = require(path.join(__dirname, "/routes/index"));
@@ -64,11 +65,11 @@ const relayRoutes = require(path.join(__dirname, "/routes/relays"));
 function startWebServer() {
     var prom = new Promise(function(resolve, reject) {
         function configureRoutes(app) {
-            app.use(authRoutes);
-            app.use(adminRoutes);
-            app.use(indexRoutes);
-            app.use(relayRoutes);
-            app.use(express.static(path.join(process.cwd(), 'public')));
+            app.use(basePath, authRoutes);
+            app.use(basePath, adminRoutes);
+            app.use(basePath, indexRoutes);
+            app.use(basePath, relayRoutes);
+            app.use(basePath, express.static(path.join(process.cwd(), 'public')));
         }
 
         if (isDev) {
