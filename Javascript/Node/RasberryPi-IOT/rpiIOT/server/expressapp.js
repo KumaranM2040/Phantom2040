@@ -41,9 +41,6 @@ var sessionConfig = {
     expires: new Date(Date.now() + (15 * 60 * 1000)) //15min session
 };
 app.use(helmet());
-// app.use(express.urlencoded({
-//     extended: true
-// }));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -72,7 +69,7 @@ function startWebServer() {
             app.use(basePath, express.static(path.join(process.cwd(), 'public')));
         }
 
-        if (isDev) {
+        if (true) {
             console.log(sessionConfig);
             sessionConfig.cookie.secure = true;
             app.use(session(sessionConfig));
