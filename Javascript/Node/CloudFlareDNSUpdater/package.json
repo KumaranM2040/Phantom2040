@@ -1,0 +1,16 @@
+{
+  "name": "cloudflarednsupdater",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js -e kumaranm2040@gmail.com -k e6a6ea969e14bcf8832ea36fd2d74730bf267 -z 9ec329dd044850e58adaf4b438a55530 -d silverlanternslight.com -a 77a3d8b49911c385263fb6627104a40b -f 30",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "yargs": "^16.2.0"
+  }
+}
