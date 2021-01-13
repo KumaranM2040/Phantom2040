@@ -6,7 +6,7 @@ function getLogin(req, res, next) {
 
 function postLogout(req, res, next) {
     req.session.destroy();
-    res.redirect('/');
+    res.redirect('/iot');
 }
 
 
@@ -21,10 +21,12 @@ async function postLogin(req, res, next) {
         req.session.IsAuthenticated = true;
         req.session.invalidUsernamePasswordCombination = false;
         req.session.User = req.body.inputEmail;
-        res.redirect('/');
+        console.log('Redirecting to /iot');
+        res.redirect('/iot');
     } else {
         req.session.invalidUsernamePasswordCombination = true;
         res.redirect('back');
+        console.log('Redirecting to back');
     }
 }
 module.exports = { getLogin, postLogin, postLogout };
