@@ -48,10 +48,12 @@ class CloudFlareAPI {
             this.CloudFlareDNSAIpAddress = dnsARecord
             if (dnsARecord !== currentPublicIP && currentPublicIP.length > 0) {
                 console.log("Change in Public IP address detected: Current Public IP is " + currentPublicIP + " dnsARecord is " + dnsARecord);
+                const url = 'https://api.cloudflare.com/client/v4/zones/'+ this.zoneId+ '/dns_records/'+ dnsId;
                 const patchCloudFlareDNSA = {
-                    url: 'https://api.cloudflare.com/client/v4/zones/'+this.zoneId+'/dns_records/' + dnsId,
+                    method: 'PATCH',
+                    url,
                     headers,
-                    body: JSON.stringify({
+                    data: JSON.stringify({
                         type: "A",
                         name: this.domainName,
                         content: currentPublicIP,
@@ -59,8 +61,8 @@ class CloudFlareAPI {
                         proxied: false
                     })
                 };
-                const res = await axios.patch(patchCloudFlareDNSA);
-                console.log("Successfully update Cloudflare DNS A record for Domain silverlanternslight " + res);
+                const res = await axios(patchCloudFlareDNSA);
+                console.log("Successfully update Cloudflare DNS A record for Domain silverlanternslight");
                 this.CloudFlareDNSAIpAddres = currentPublicIP;
             } else if (currentPublicIP.length > 0) {
                 console.log("No change in Public IP address " + currentPublicIP);
