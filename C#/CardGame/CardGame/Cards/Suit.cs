@@ -1,0 +1,10 @@
+﻿namespace CardGame.Cards
+{
+    public enum Suit
+    {
+        Diamonds,
+        Hearts,
+        Spades,
+        Clubs
+    }
+}
