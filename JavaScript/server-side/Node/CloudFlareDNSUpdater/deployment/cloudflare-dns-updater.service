@@ -1,0 +1,9 @@
+[Unit]
+Description=Start the Cloud Flare DNSA Updater Service so that Cloud Flare can route traffic from our Domain to our IP Address
+After=multi-user.target
+[Service]
+ExecStart=/usr/local/bin/cloudflare_dnsa_update.sh
+ExecStop=/usr/local/bin/cloudflare_dnsa_update_stop.sh
+User=pi
+[Install]
+WantedBy=multi-user.target
