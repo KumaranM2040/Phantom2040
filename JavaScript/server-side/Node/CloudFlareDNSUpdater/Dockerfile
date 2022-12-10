@@ -1,9 +1,9 @@
 ARG CACHE_DATE=not_a_date
 FROM node:10-alpine
 
-RUN mkdir -p /home/node/dev/Phantom2040/Javascript/Node/CloudFlareDNSUpdater/ && chown -R node:node /home/node/dev/Phantom2040/Javascript/Node/CloudFlareDNSUpdater
+RUN mkdir -p /home/node/dev/Phantom2040/Javascript/Node/CloudflareDNSUpdater/ && chown -R node:node /home/node/dev/Phantom2040/Javascript/Node/CloudflareDNSUpdater
 # Create app directory
-WORKDIR /home/node/dev/Phantom2040/Javascript/Node/CloudFlareDNSUpdater
+WORKDIR /home/node/dev/Phantom2040/Javascript/Node/CloudflareDNSUpdater
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
