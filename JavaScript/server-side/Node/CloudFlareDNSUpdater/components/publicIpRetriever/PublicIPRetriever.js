@@ -9,6 +9,7 @@ class PublicIPRetriever {
    async getHostPublicIp () {
       try {
          const response = await axios(this.publicIpUrl);
+         console.log('Hosts public IP address is ' + response.data);
          return response.data;
       } catch (error) {
          console.error(error);

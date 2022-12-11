@@ -13,7 +13,7 @@ class CloudflareAPI {
       this.CloudflareAPIUrl = 'https://api.cloudflare.com/client/v4/zones/';
    }
 
-   buildCloudflareRequest(httpVerb, url, payload) {
+   buildCloudflareRequest (httpVerb, url, payload) {
       const headers = {
          'X-Auth-Email': this.email,
          'X-Auth-Key': this.key,
@@ -32,13 +32,21 @@ class CloudflareAPI {
 
    async getCloudflareDNSAEntryIp () {
       try {
-         const url =  this.CloudflareAPIUrl + this.zoneId + '/dns_records?type=A&name=' + this.domainName + '&status=active&account.id='
-         + this.accountId + '&page=1&per_page=20&order=type&direction=desc&match=all';
+         const url =
+            this.CloudflareAPIUrl +
+            this.zoneId +
+            '/dns_records?type=A&name=' +
+            this.domainName +
+            '&status=active&account.id=' +
+            this.accountId +
+            '&page=1&per_page=20&order=type&direction=desc&match=all';
          const response = await axios(this.buildCloudflareRequest('GET', url, null));
          const result = response.data;
          let dnsARecord = result.result[0].content;
          this.dnsId = result.result[0].id;
-         console.log('Cloudflare DNSA record Ip Address for ' + this.domainName + ' is ' + dnsARecord + ' dnsId is ' + this.dnsId);
+         console.log(
+            'Cloudflare DNSA record Ip Address for ' + this.domainName + ' is ' + dnsARecord + ' dnsId is ' + this.dnsId
+         );
          this.CloudflareDNSAIpAddress = dnsARecord;
          return dnsARecord;
       } catch (exception) {
@@ -48,7 +56,8 @@ class CloudflareAPI {
 
    async updateCloudflareDNSA (ipAddress) {
       console.log('IP address to update Cloudflare DNSA entry with ' + ipAddress);
-      if (!this.dnsId){
+
+      if (!this.dnsId) {
          console.log('Cannot update Cloudflare DNSA entry without first calling getCloudflareDNSAEntryIp');
       }
 
@@ -67,7 +76,7 @@ class CloudflareAPI {
                content: ipAddress,
                ttl: 1,
                proxied: false
-            })
+            });
             const res = await axios(this.buildCloudflareRequest('PATCH', url, payload));
             console.log('Successfully update Cloudflare DNS A record for Domain silverlanternslight');
             this.CloudflareDNSAIpAddres = ipAddress;
