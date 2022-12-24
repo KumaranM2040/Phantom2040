@@ -434,3 +434,5 @@ $RECYCLE.BIN/
 
 **/bin/**
 **/obj/**
+
+**/coverage/**
