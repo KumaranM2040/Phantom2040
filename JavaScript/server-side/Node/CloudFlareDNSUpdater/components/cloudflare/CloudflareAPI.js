@@ -59,6 +59,7 @@ class CloudflareAPI {
 
       if (!this.dnsId) {
          console.log('Cannot update Cloudflare DNSA entry without first calling getCloudflareDNSAEntryIp');
+         return;
       }
 
       try {
