@@ -1,0 +1,27 @@
+{
+  "name": "cloudflarednsupdater",
+  "version": "1.0.0",
+  "description": "Application used to update Cloud Flares DNSA entry so that traffic can be routed to this servers IP Address for processing. Used in Self Hosting on Raspberry Pi",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --use_strict index.js -i https://api.ipify.org -e kumaranm2040@gmail.com -k CLOUDFLARE_SILVERLANTERNSLIGHT_KEY -z CLOUDFLARE_SILVERLANTERNSLIGHT_ZONEID -d silverlanternslight.com -a CLOUDFLARE_ACCOUNTID -f 30",
+    "prod": "NODE_ENV='production' node index.js -i https://api.ipify.org -e kumaranm2040@gmail.com -k CLOUDFLARE_SILVERLANTERNSLIGHT_KEY -z CLOUDFLARE_SILVERLANTERNSLIGHT_ZONEID -d silverlanternslight.com -a CLOUDFLARE_ACCOUNTID -f 30",
+    "build_docker_image": "docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) -t kumaranm2040/cloudflarednsupdater .",
+    "format": "npx prettier --write --single-quote --print-width 120 .",
+    "test": "jest -c jest.config.js",
+    "deploy": "sh deployment/deploy.sh"
+  },
+  "author": "Kumaran Moodley",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "axios-mock-adapter": "^1.21.2",
+    "jest": "^29.3.1",
+    "prettier": "^2.7.1",
+    "yargs": "^16.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:KumaranM2040/Phantom2040.git"
+  }
+}
