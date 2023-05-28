@@ -42,11 +42,13 @@ class CloudflareAPI {
             '&page=1&per_page=20&order=type&direction=desc&match=all';
          const response = await axios(this.buildCloudflareRequest('GET', url, null));
          const result = response.data;
+         if (result.result[0] == undefined || result.result[0].content == undefined) {
+            this.CloudflareDNSAIpAddress = '0.0.0.0';
+            return this.CloudflareDNSAIpAddress;
+         }
          let dnsARecord = result.result[0].content;
          this.dnsId = result.result[0].id;
-         console.log(
-            'Cloudflare DNSA record Ip Address for ' + this.domainName + ' is ' + dnsARecord + ' dnsId is ' + this.dnsId
-         );
+         console.log('Cloudflare DNSA record Ip Address for ' + this.domainName + ' is ' + dnsARecord + ' dnsId is ' + this.dnsId );
          this.CloudflareDNSAIpAddress = dnsARecord;
          return dnsARecord;
       } catch (exception) {
@@ -79,7 +81,7 @@ class CloudflareAPI {
                proxied: false
             });
             const res = await axios(this.buildCloudflareRequest('PATCH', url, payload));
-            console.log('Successfully update Cloudflare DNS A record for Domain silverlanternslight');
+            console.log('Successfully update Cloudflare DNS A record for Domain ' + this.domainName);
             this.CloudflareDNSAIpAddres = ipAddress;
          } else if (ipAddress.length > 0) {
             console.log('No change in Public IP address ' + ipAddress);

@@ -3,13 +3,15 @@ const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 const CloudflareAPI = require('./components/cloudflare/CloudflareAPI');
 const PublicIPRetriever = require('./components/publicIpRetriever/PublicIPRetriever');
+require('dotenv').config();
 
 const argv = yargs(hideBin(process.argv))
    .example('$0 ', 'Checks current IP address and compares to Cloudflare DNSA entry, If different update')
    .demandOption(['e', 'k', 'z', 'd', 'a', 'f', 'i'])
    .help('h')
    .alias('h', 'help')
-   .epilog('copyright 2019')
+   .epilog('copyright 2023')
+   .env()
    .option('verbose', {
       alias: 'v',
       type: 'boolean',
